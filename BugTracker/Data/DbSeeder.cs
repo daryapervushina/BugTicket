@@ -28,7 +28,7 @@ namespace BugTracker.Data
             var email = _options.Email.Trim();
             var user = await _db.Users
                 .Include(user => user.Roles)
-                .SingleOrDefaultAsync(user => user.Email == email);
+                .SingleOrDefaultAsync(user => user.Email == email); 
 
             if (user == null)
             {

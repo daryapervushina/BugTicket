@@ -22,6 +22,7 @@ var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<Jw
 
 
 
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IDbSeeder, DbSeeder>();
 builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
