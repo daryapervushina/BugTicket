@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Вход в систему - BugTracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/login.css" />
+  </head>
+  <body class="login-layout">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo">B</div>
+        <div class="auth-subtitle">BugTracker</div>
+        <h1 class="auth-title">Вход в систему</h1>
+      </div>
+      <form class="auth-form">
+        <div class="input-field">
+          <label class="input-field__label" for="email">Email *</label>
+          <input
+            class="input-field__control"
+            type="email"
+            id="email"
+            placeholder="name@example.com"
+            required
+          />
+        </div>
+        <div class="input-field">
+          <label class="input-field__label" for="password">Пароль *</label>
+          <input
+            class="input-field__control"
+            type="password"
+            id="password"
+            placeholder="Введите пароль"
+            required
+          />
+        </div>
+        <div class="input-field">
+          <span class="input-field__label">Роль *</span>
+          <div class="custom-select" id="role-select">
+            <button
+              type="button"
+              class="input-field__control custom-select__trigger"
+              aria-haspopup="listbox"
+            >
+              <span class="custom-select__text">Выберите роль</span>
+              <svg
+                width="12"
+                height="7"
+                viewBox="0 0 12 7"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0.75 0.75L5.75 5.75L10.75 0.75"
+                  stroke="#6B7280"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+
+            <div class="custom-select__dropdown">
+              <div class="custom-select__option" data-value="Developer">
+                Разработчик
+              </div>
+              <div class="custom-select__option" data-value="Tester">
+                Тестировщик
+              </div>
+            </div>
+            <input type="hidden" name="role" id="role-input" />
+          </div>
+        </div>
+
+        <button type="submit" class="button button--primary button--block">
+          Войти
+        </button>
+      </form>
+      <div class="auth-footer">
+        <p class="auth-text">
+          Вы разработчик? <a href="#">Зарегистрироваться</a>
+        </p>
+        <p class="auth-hint">Аккаунт тестировщика выдаёт администратор</p>
+      </div>
+    </div>
+
+    <script src="../js/login.js"></script>
+  </body>
+</html>
