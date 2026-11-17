@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Интернет-магазин «Ромашка» — BugTracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/project_view.css" />
+  </head>
+
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <a class="brand" href="dev_projects.html">
+          <span class="brand__logo">B</span>
+          <span>BugTracker</span>
+        </a>
+
+        <nav class="sidebar__nav">
+          <p class="sidebar__caption">Меню</p>
+
+          <a class="nav-item nav-item--active" href="dev_projects.html">
+            <img src="../assets/icons/folder.svg" alt="" />
+            <span>Мои проекты</span>
+          </a>
+        </nav>
+
+        <div class="sidebar__profile">
+          <div class="avatar">ИП</div>
+
+          <div class="profile-info">
+            <strong>Иван Петров</strong>
+            <span>i.petrov@stud.tsu.ru</span>
+            <a href="#">Роль: Разработчик</a>
+          </div>
+
+          <div class="profile-actions">
+            <button class="logout-button" type="button">
+              <img src="../assets/icons/log-out.svg" alt="" />
+              Выйти
+            </button>
+
+            <a class="change-role" href="#">Сменить роль</a>
+          </div>
+        </div>
+      </aside>
+
+      <div class="content-area">
+        <header class="topbar">
+          <div class="breadcrumbs">
+            <a href="dev_projects.html">Мои проекты</a>
+            <span>/</span>
+            <strong>Интернет-магазин «Ромашка»</strong>
+          </div>
+
+          <button class="notification-button" type="button" aria-label="Уведомления">
+            <img src="../assets/icons/bell.svg" alt="" />
+            <span class="notification-count">2</span>
+          </button>
+        </header>
+
+        <main class="project-view-page">
+          <div class="project-title">
+            <h1>Интернет-магазин «Ромашка»</h1>
+
+            <div class="project-title__meta">
+              <span>Опубликован 20.10.2026</span>
+              <span class="chip chip--info">Опубликован</span>
+            </div>
+          </div>
+
+          <section class="project-details">
+            <form class="project-fields" id="project-form">
+              <div class="input-field">
+                <label class="input-field__label" for="project-name">
+                  Название проекта *
+                </label>
+
+                <input
+                  class="input-field__control"
+                  id="project-name"
+                  value="Интернет-магазин «Ромашка»"
+                  required
+                />
+              </div>
+
+              <div class="input-field">
+                <label class="input-field__label" for="repository">
+                  Ссылка на репозиторий *
+                </label>
+
+                <div class="repository-field">
+                  <input
+                    class="input-field__control"
+                    id="repository"
+                    type="url"
+                    value="https://github.com/team-romashka/shop"
+                    required
+                  />
+
+                  <a
+                    class="repository-field__link"
+                    id="repository-link"
+                    href="https://github.com/team-romashka/shop"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="Открыть репозиторий"
+                >
+                    <img src="../assets/icons/arrow.svg" alt="" />
+                </a>
+                </div>
+              </div>
+
+              <div class="project-actions">
+                <button class="button button--primary" type="submit">
+                  Сохранить проект
+                </button>
+
+                <button class="button button--primary" type="button" disabled>
+                    ✓ Опубликован
+                </button>
+              </div>
+            </form>
+
+            <section class="project-developers">
+                <label class="input-field__label" for="developer-search">
+                    Добавить разработчиков
+                </label>
+
+                <div class="developer-picker">
+                  <div class="developer-search">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="11" cy="11" r="6"></circle>
+                       <path d="m16 16 4 4"></path>
+                      </svg>
+
+                      <input
+                        id="developer-search"
+                       type="text"
+                      placeholder="Найти по имени или фамилии"
+                       autocomplete="off"
+                     />
+                 </div>
+
+                 <div class="developer-options" id="developer-options"></div>
+                </div>
+
+                 <p class="project-developers__label">Разработчики проекта</p>
+                 <div class="developer-list" id="developer-list"></div>
+                </section>
+          </section>
+
+          <section class="tickets-section">
+            <h2>Тикеты проекта</h2>
+
+            <div class="ticket-filters">
+              <div class="ticket-search">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="6"></circle>
+                  <path d="m16 16 4 4"></path>
+                </svg>
+
+                <input
+                  class="filter-control"
+                  id="ticket-search"
+                  type="search"
+                  placeholder="Поиск по названию или №"
+                />
+              </div>
+
+              <select class="filter-control filter-select" id="status-filter">
+                <option value="all">Статус бага: все</option>
+                <option value="Исправлен">Исправлен</option>
+                <option value="В разработке">В разработке</option>
+                <option value="Не исправлен">Не исправлен</option>
+              </select>
+
+              <select class="filter-control filter-select" id="priority-filter">
+                <option value="all">Приоритет: все</option>
+                <option value="Высокий">Высокий</option>
+                <option value="Средний">Средний</option>
+                <option value="Низкий">Низкий</option>
+              </select>
+
+              <label class="filter-checkbox">
+                <input id="only-mine" type="checkbox" />
+                Только мои
+              </label>
+
+              <label class="filter-checkbox">
+                <input id="hide-closed" type="checkbox" />
+                Скрыть закрытые
+              </label>
+            </div>
+
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>№</th>
+                    <th>Название</th>
+                    <th>Статус бага</th>
+                    <th>Статус проверки</th>
+                    <th>Приоритет ↕</th>
+                    <th>Ответственный</th>
+                    <th>Дедлайн</th>
+                  </tr>
+                </thead>
+
+                <tbody id="tickets-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../js/project_view.js"></script>
+  </body>
+</html>

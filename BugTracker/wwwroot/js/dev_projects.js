@@ -60,7 +60,7 @@ function renderProjects() {
 
     const repository = document.createElement("a");
     repository.className = "project-card__repository";
-    repository.href = "#";
+    repository.href = "project_view.html";
     repository.textContent = project.repository;
 
     const footer = document.createElement("div");
