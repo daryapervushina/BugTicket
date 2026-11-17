@@ -93,21 +93,7 @@ function renderProjects() {
 }
 
 function createProject() {
-  const name = window.prompt("Введите название проекта:");
-
-  if (!name || !name.trim()) {
-    return;
-  }
-
-  projects.unshift({
-    name: name.trim(),
-    repository: "Репозиторий пока не добавлен",
-    tickets: 0,
-    status: "Черновик",
-    statusClass: "chip--neutral",
-  });
-
-  renderProjects();
+  window.location.href = "project_create.html";
 }
 
 document

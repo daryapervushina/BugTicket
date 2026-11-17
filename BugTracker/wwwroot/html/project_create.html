@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Новый проект — BugTracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/project_create.css" />
+  </head>
+
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <a class="brand" href="dev_projects.html">
+          <span class="brand__logo">B</span>
+          <span>BugTracker</span>
+        </a>
+
+        <nav class="sidebar__nav">
+          <p class="sidebar__caption">Меню</p>
+
+          <a class="nav-item nav-item--active" href="dev_projects.html">
+            <img src="../assets/icons/folder.svg" alt="" />
+            <span>Мои проекты</span>
+          </a>
+        </nav>
+
+        <div class="sidebar__profile">
+          <div class="avatar">ИП</div>
+
+          <div class="profile-info">
+            <strong>Иван Петров</strong>
+            <span>i.petrov@stud.tsu.ru</span>
+            <a href="#">Роль: Разработчик</a>
+          </div>
+
+          <div class="profile-actions">
+            <button class="logout-button" type="button">
+              <img src="../assets/icons/log-out.svg" alt="" />
+              Выйти
+            </button>
+
+            <a class="change-role" href="#">Сменить роль</a>
+          </div>
+        </div>
+      </aside>
+
+      <div class="content-area">
+        <header class="topbar">
+          <div class="breadcrumbs">
+            <a href="dev_projects.html">Мои проекты</a>
+            <span>/</span>
+            <strong>Новый проект</strong>
+          </div>
+
+          <button class="notification-button" type="button" aria-label="Уведомления">
+            <img src="../assets/icons/bell.svg" alt="" />
+            <span class="notification-count">2</span>
+          </button>
+        </header>
+
+        <main class="create-page">
+          <h1>Новый проект</h1>
+
+          <div class="create-layout">
+            <section class="panel project-form-panel">
+              <h2>Данные проекта</h2>
+
+              <form id="project-form" novalidate>
+                <div class="input-field">
+                  <label class="input-field__label" for="project-name">
+                    Название проекта *
+                  </label>
+
+                  <input
+                    class="input-field__control"
+                    id="project-name"
+                    type="text"
+                    placeholder="Введите название проекта"
+                    required
+                  />
+                </div>
+
+                <div class="input-field">
+                  <label class="input-field__label" for="repository">
+                    Ссылка на репозиторий *
+                  </label>
+
+                  <input
+                    class="input-field__control repository-input"
+                    id="repository"
+                    type="url"
+                    placeholder="https://github.com/user/repository"
+                    required
+                  />
+
+                  <p class="repository-error" id="repository-error">
+                    Введите корректную ссылку, например:
+                    https://github.com/user/repository
+                  </p>
+                </div>
+
+                <div class="input-field">
+                  <label class="input-field__label" for="developer-search">
+                    Добавить разработчиков *
+                  </label>
+
+                  <div class="developer-picker">
+                    <div class="developer-search">
+                      <span class="developer-search__icon">⌕</span>
+
+                      <input
+                        id="developer-search"
+                        type="text"
+                        placeholder="Начните вводить имя"
+                        autocomplete="off"
+                      />
+                    </div>
+
+                    <div class="developer-options" id="developer-options"></div>
+                  </div>
+
+                  <p class="developers-error" id="developers-error">
+                    Выберите хотя бы одного разработчика
+                  </p>
+                </div>
+
+                <div class="project-form__actions">
+                  <button
+                    class="button button--primary"
+                    id="save-project"
+                    type="submit"
+                    disabled
+                  >
+                    Сохранить проект
+                  </button>
+
+                  <button
+                    class="button button--primary"
+                    id="publish-project"
+                    type="button"
+                    disabled
+                  >
+                    Опубликовать проект
+                  </button>
+                </div>
+              </form>
+            </section>
+
+            <aside class="panel developers-panel">
+              <h2>Разработчики проекта</h2>
+              <p>Из этой группы выбирается ответственный за тикет</p>
+
+              <div class="selected-developers" id="selected-developers"></div>
+            </aside>
+          </div>
+
+          <section class="panel tickets-panel">
+            <h2>Тикеты проекта</h2>
+
+            <div class="tickets-empty">
+              <strong>Тикетов пока нет</strong>
+              <span>Тикеты заводят тестировщики после публикации проекта.</span>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <script src="../js/project_create.js"></script>
+  </body>
+</html>
