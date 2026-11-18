@@ -76,13 +76,6 @@ emailInput.addEventListener("blur", function () {
 });
 
 passwordInput.addEventListener("input", function () {
-  if (!passwordError.hidden) {
-    updatePasswordError();
-  }
-  updateSubmitState();
-});
-
-passwordInput.addEventListener("blur", function () {
   updatePasswordError();
   updateSubmitState();
 });
