@@ -10,7 +10,7 @@ const emailError = document.getElementById("email-error");
 const passwordInput = document.getElementById("password");
 const submitButton = form.querySelector('button[type="submit"]');
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 function isEmailValid() {
   return EMAIL_PATTERN.test(emailInput.value.trim());
@@ -69,4 +69,7 @@ document.addEventListener("keydown", function (event) {
 
 form.addEventListener("submit", function (event) {
   event.preventDefault();
+  if (submitButton.disabled) {
+    return;
+  }
 });

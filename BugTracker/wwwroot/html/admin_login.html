@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Вход администратора - BugTracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/admin_login.css" />
+  </head>
+  <body class="admin-login-layout">
+    <div class="admin-login-card">
+      <div class="admin-login-header">
+        <div class="logo">B</div>
+        <div class="admin-login-subtitle">BugTracker</div>
+        <h1 class="admin-login-title">Вход администратора</h1>
+      </div>
+
+      <form class="admin-login-form" novalidate>
+        <div class="input-field" id="email-field">
+          <label class="input-field__label" for="email">Email *</label>
+          <input
+            class="input-field__control"
+            type="email"
+            id="email"
+            name="email"
+            placeholder="name@example.com"
+            autocomplete="email"
+            aria-describedby="email-error"
+            required
+          />
+          <p class="input-field__error" id="email-error" hidden>
+            Введите корректный email
+          </p>
+        </div>
+
+        <div class="input-field">
+          <label class="input-field__label" for="password">Пароль *</label>
+          <input
+            class="input-field__control"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Введите пароль"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="button button--primary button--block"
+          disabled
+        >
+          Войти
+        </button>
+      </form>
+
+      <p class="admin-login-hint">Доступ только для администраторов системы</p>
+    </div>
+
+    <script src="../js/admin_login.js"></script>
+  </body>
+</html>

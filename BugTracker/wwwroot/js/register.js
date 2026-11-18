@@ -9,7 +9,7 @@ const emailError = document.getElementById("email-error");
 const passwordError = document.getElementById("password-error");
 const submitButton = form.querySelector('button[type="submit"]');
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_PATTERN = /^(?=.*[A-Za-zА-Яа-яЁё])(?=.*\d).{8,}$/;
 const EMAIL_INVALID_TEXT = "Введите корректный email";
 const EMAIL_TAKEN_TEXT = "Пользователь с таким email уже существует";
