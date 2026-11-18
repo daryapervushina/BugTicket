@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Регистрация разработчика - BugTracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/register.css" />
+  </head>
+  <body class="register-layout">
+    <div class="register-card">
+      <div class="register-header">
+        <div class="logo">B</div>
+        <div class="register-subtitle">BugTracker</div>
+        <h1 class="register-title">Регистрация разработчика</h1>
+      </div>
+
+      <div class="banner banner--info" role="note">
+        <img class="banner__icon" src="../assets/icons/info.svg" alt="" />
+        <div class="banner__body">
+          <p class="banner__title">Только для разработчиков</p>
+          <p class="banner__text">
+            Аккаунты тестировщиков создаёт администратор системы.
+          </p>
+        </div>
+      </div>
+
+      <form class="register-form" novalidate>
+        <div class="register-form__row">
+          <div class="input-field">
+            <label class="input-field__label" for="last-name">Фамилия *</label>
+            <input
+              class="input-field__control"
+              type="text"
+              id="last-name"
+              name="lastName"
+              placeholder="Петров"
+              autocomplete="family-name"
+              required
+            />
+          </div>
+          <div class="input-field">
+            <label class="input-field__label" for="first-name">Имя *</label>
+            <input
+              class="input-field__control"
+              type="text"
+              id="first-name"
+              name="firstName"
+              placeholder="Иван"
+              autocomplete="given-name"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="input-field" id="email-field">
+          <label class="input-field__label" for="email">Email *</label>
+          <input
+            class="input-field__control"
+            type="email"
+            id="email"
+            name="email"
+            placeholder="name@example.com"
+            autocomplete="email"
+            aria-describedby="email-error"
+            required
+          />
+          <p class="input-field__error" id="email-error" hidden>
+            Введите корректный email
+          </p>
+        </div>
+
+        <div class="input-field" id="password-field">
+          <label class="input-field__label" for="password">Пароль *</label>
+          <input
+            class="input-field__control"
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Придумайте пароль"
+            autocomplete="new-password"
+            aria-describedby="password-error"
+            required
+          />
+          <p class="input-field__error" id="password-error" hidden>
+            Пароль должен содержать не менее 8 символов, буквы и цифры
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          class="button button--primary button--block"
+          disabled
+        >
+          Зарегистрироваться
+        </button>
+      </form>
+
+      <div class="register-footer">
+        <p class="register-footer__text">
+          Уже есть аккаунт? <a href="login.html">Войти</a>
+        </p>
+      </div>
+    </div>
+
+    <script src="../js/register.js"></script>
+  </body>
+</html>

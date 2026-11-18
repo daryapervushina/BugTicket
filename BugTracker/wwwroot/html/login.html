@@ -23,16 +23,20 @@
         <div class="auth-subtitle">BugTracker</div>
         <h1 class="auth-title">Вход в систему</h1>
       </div>
-      <form class="auth-form">
-        <div class="input-field">
+      <form class="auth-form" novalidate>
+        <div class="input-field" id="email-field">
           <label class="input-field__label" for="email">Email *</label>
           <input
             class="input-field__control"
             type="email"
             id="email"
             placeholder="name@example.com"
+            aria-describedby="email-error"
             required
           />
+          <p class="input-field__error" id="email-error" hidden>
+            Введите корректный email
+          </p>
         </div>
         <div class="input-field">
           <label class="input-field__label" for="password">Пароль *</label>
@@ -68,13 +72,17 @@
           </div>
         </div>
 
-        <button type="submit" class="button button--primary button--block">
+        <button
+          type="submit"
+          class="button button--primary button--block"
+          disabled
+        >
           Войти
         </button>
       </form>
       <div class="auth-footer">
         <p class="auth-text">
-          Вы разработчик? <a href="#">Зарегистрироваться</a>
+          Вы разработчик? <a href="register.html">Зарегистрироваться</a>
         </p>
         <p class="auth-hint">Аккаунт тестировщика выдаёт администратор</p>
       </div>
