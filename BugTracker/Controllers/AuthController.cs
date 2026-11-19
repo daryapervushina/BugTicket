@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using BugTracker.DTOs.Auth;
 using BugTracker.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,18 @@ namespace BugTracker.Controllers
         public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
         {
             var response = await _authService.LoginAsync(request);
+            return Ok(response);
+        }
+        [Authorize(Roles = "Developer,Tester")]
+        [HttpPost("switch-role")]
+        public async Task<ActionResult<LoginResponse>> SwitchRole(SwitchRoleRequest request)
+        {
+            if (!int.TryParse(User.FindFirst("sub")?.Value, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var response = await _authService.SwitchRoleAsync(userId, request);
             return Ok(response);
         }
     }

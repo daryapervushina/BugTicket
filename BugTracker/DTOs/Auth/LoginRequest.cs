@@ -12,7 +12,9 @@ namespace BugTracker.DTOs.Auth
         [Required]
         public string Password { get; set; } = string.Empty;
 
-        [JsonRequired, JsonConverter(typeof(JsonStringEnumConverter<Role>))]
+        [JsonRequired]
+        [EnumDataType(typeof(Role))]
+        [JsonConverter(typeof(JsonStringEnumConverter<Role>))]
         public Role Role { get; set; }
     }
 }

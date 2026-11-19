@@ -79,5 +79,40 @@ namespace BugTracker.Services
             var token = _tokenGenerator.Generate(user.Id, request.Role);
             return new LoginResponse(token, request.Role.ToString(), user.MustChangePassword);
         }
+        public async Task<LoginResponse> SwitchRoleAsync(int userId, SwitchRoleRequest request)
+        {
+            var user = await _db.Users.AsNoTracking()
+                .Include(user => user.Roles)
+                .SingleOrDefaultAsync(user => user.Id == userId);
+
+            if (user == null)
+            {
+                throw new InvalidCredentialsException("User no longer exists.");
+            }
+
+            if (user.IsBlocked)
+            {
+                throw new AccountBlockedException("Account is blocked.");
+            }
+
+            if (user.MustChangePassword)
+            {
+                throw new ForbiddenException("Change the temporary password before switching roles.");
+            }
+
+            if (request.Role != Role.Developer && request.Role != Role.Tester)
+            {
+                throw new RoleForbiddenException("Only developer and tester roles can be switched.");
+            }
+
+            if (!user.Roles.Any(role => role.Role == Role.Developer)
+                || !user.Roles.Any(role => role.Role == Role.Tester))
+            {
+                throw new RoleForbiddenException("Both developer and tester roles are required.");
+            }
+
+            var token = _tokenGenerator.Generate(user.Id, request.Role);
+            return new LoginResponse(token, request.Role.ToString(), user.MustChangePassword);
+        }
     }
 }
