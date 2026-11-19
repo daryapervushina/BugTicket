@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Новый тестировщик - BugTracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/create-tester.css" />
+  </head>
+  <body>
+    <div class="page-screen"></div>
+
+    <div class="modal-overlay">
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
+        <div class="modal__header">
+          <h1 class="modal__title" id="modal-title">Новый тестировщик</h1>
+          <button
+            type="button"
+            class="modal__close"
+            aria-label="Закрыть"
+            data-close
+          >
+            <img src="../assets/icons/close.svg" alt="" />
+          </button>
+        </div>
+
+        <form class="modal__form" novalidate>
+          <div class="modal__row">
+            <div class="input-field">
+              <label class="input-field__label" for="last-name"
+                >Фамилия *</label
+              >
+              <input
+                class="input-field__control"
+                type="text"
+                id="last-name"
+                name="lastName"
+                placeholder="Сидоров"
+                autocomplete="family-name"
+              />
+            </div>
+
+            <div class="input-field">
+              <label class="input-field__label" for="first-name">Имя *</label>
+              <input
+                class="input-field__control"
+                type="text"
+                id="first-name"
+                name="firstName"
+                placeholder="Олег"
+                autocomplete="given-name"
+              />
+            </div>
+          </div>
+
+          <div class="input-field" id="email-field">
+            <label class="input-field__label" for="email">Email *</label>
+            <input
+              class="input-field__control"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="name@example.com"
+              autocomplete="email"
+            />
+            <span class="input-field__error" id="email-error" hidden>
+              Введите корректный email
+            </span>
+          </div>
+
+          <div class="banner banner--info">
+            <img class="banner__icon" src="../assets/icons/info.svg" alt="" />
+            <div class="banner__body">
+              <p class="banner__title">Пароль сгенерируется автоматически</p>
+              <p class="banner__text">
+                Вы увидите его один раз после создания. Тестировщик сменит
+                пароль при первом входе.
+              </p>
+            </div>
+          </div>
+
+          <div class="modal__actions">
+            <button type="button" class="button button--secondary" data-close>
+              Отмена
+            </button>
+            <button type="submit" class="button button--primary" disabled>
+              Создать
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="../js/create-tester.js"></script>
+  </body>
+</html>
