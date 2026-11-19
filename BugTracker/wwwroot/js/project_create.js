@@ -29,6 +29,7 @@ const selectedDeveloperIds = new Set();
 
 const projectForm = document.getElementById("project-form");
 const projectNameInput = document.getElementById("project-name");
+const repositoryField = document.getElementById("repository-field");
 const repositoryInput = document.getElementById("repository");
 const repositoryError = document.getElementById("repository-error");
 const developerSearch = document.getElementById("developer-search");
@@ -56,20 +57,13 @@ function updateFormState() {
   const repositoryIsValid = isValidUrl(repositoryInput.value);
   const developersAreSelected = selectedDeveloperIds.size > 0;
 
-  repositoryInput.classList.toggle(
-    "is-invalid",
-    repositoryTouched && !repositoryIsValid,
-  );
+  const repositoryHasError = repositoryTouched && !repositoryIsValid;
+  const developersHaveError = developersTouched && !developersAreSelected;
 
-  repositoryError.classList.toggle(
-    "is-visible",
-    repositoryTouched && !repositoryIsValid,
-  );
+  repositoryField.classList.toggle("input-field--error", repositoryHasError);
+  repositoryError.hidden = !repositoryHasError;
 
-  developersError.classList.toggle(
-    "is-visible",
-    developersTouched && !developersAreSelected,
-  );
+  developersError.hidden = !developersHaveError;
 
   const formIsValid =
     nameIsValid &&

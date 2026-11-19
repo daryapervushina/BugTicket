@@ -91,26 +91,27 @@
                   />
                 </div>
 
-                <div class="input-field">
+                <div class="input-field" id="repository-field">
                   <label class="input-field__label" for="repository">
                     Ссылка на репозиторий *
                   </label>
 
                   <input
-                    class="input-field__control repository-input"
+                    class="input-field__control"
                     id="repository"
                     type="url"
                     placeholder="https://github.com/user/repository"
+                    aria-describedby="repository-error"
                     required
                   />
 
-                  <p class="repository-error" id="repository-error">
+                  <p class="input-field__error" id="repository-error" hidden>
                     Введите корректную ссылку, например:
                     https://github.com/user/repository
                   </p>
                 </div>
 
-                <div class="input-field">
+                <div class="input-field" id="developers-field">
                   <label class="input-field__label" for="developer-search">
                     Добавить разработчиков *
                   </label>
@@ -124,13 +125,14 @@
                         type="text"
                         placeholder="Начните вводить имя"
                         autocomplete="off"
+                        aria-describedby="developers-error"
                       />
                     </div>
 
                     <div class="developer-options" id="developer-options"></div>
                   </div>
 
-                  <p class="developers-error" id="developers-error">
+                  <p class="input-field__error" id="developers-error" hidden>
                     Выберите хотя бы одного разработчика
                   </p>
                 </div>
