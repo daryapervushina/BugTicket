@@ -1,3 +1,4 @@
+using BugTracker.Common;
 using BugTracker.Data;
 using BugTracker.Services;
 using BugTracker.Options;
@@ -48,6 +49,8 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 
 var app = builder.Build();
@@ -57,6 +60,7 @@ await using (var scope = app.Services.CreateAsyncScope())
     await scope.ServiceProvider.GetRequiredService<IDbSeeder>().EnsureAdminAsync();
 }
 
+app.UseExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 
