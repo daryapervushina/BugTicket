@@ -1,0 +1,25 @@
+.modal--confirm {
+  position: relative;
+  max-width: 480px;
+  padding-bottom: 33px;
+}
+
+.modal--confirm .modal__header {
+  margin-bottom: var(--space-20);
+}
+
+.modal--confirm .modal__close {
+  position: absolute;
+  top: var(--space-20);
+  right: var(--space-20);
+}
+
+.modal__text {
+  color: var(--text-secondary);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-21);
+}
+
+.modal--confirm .modal__actions {
+  margin-top: 54px;
+}

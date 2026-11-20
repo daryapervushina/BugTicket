@@ -16,11 +16,36 @@
     <link rel="stylesheet" href="../css/components.css" />
     <link rel="stylesheet" href="../css/create-tester.css" />
     <link rel="stylesheet" href="../css/tester-created.css" />
+    <link rel="stylesheet" href="../css/tester-block.css" />
   </head>
   <body>
     <div class="page-screen">
       <button type="button" class="button button--primary" id="open-modal-btn">
         Создать тестировщика
+      </button>
+      <button
+        type="button"
+        class="button button--text"
+        data-block-tester
+        data-tester-id="1"
+      >
+        Заблокировать
+      </button>
+      <button
+        type="button"
+        class="button button--text"
+        data-block-tester
+        data-tester-id="2"
+      >
+        Заблокировать
+      </button>
+      <button
+        type="button"
+        class="button button--text"
+        data-block-tester
+        data-tester-id="3"
+      >
+        Заблокировать
       </button>
     </div>
 
@@ -174,7 +199,54 @@
       </div>
     </div>
 
+    <div class="modal-overlay" id="block-overlay">
+      <div
+        class="modal modal--confirm"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="block-title"
+      >
+        <div class="modal__header">
+          <h1 class="modal__title" id="block-title">
+            Заблокировать тестировщика?
+          </h1>
+          <button
+            type="button"
+            class="modal__close"
+            aria-label="Закрыть"
+            data-close-block
+          >
+            <img src="../assets/icons/close.svg" alt="" />
+          </button>
+        </div>
+
+        <p class="modal__text">
+          <span id="block-user-name"></span> не сможет войти с ролью
+          «Тестировщик». Созданные им тикеты сохранятся.
+        </p>
+
+        <div class="modal__actions">
+          <button
+            type="button"
+            class="button button--secondary"
+            data-close-block
+          >
+            Отмена
+          </button>
+          <button
+            type="button"
+            class="button button--danger"
+            id="confirm-block-btn"
+          >
+            Заблокировать
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/testers-data.js"></script>
     <script src="../js/create-tester.js"></script>
     <script src="../js/tester-created.js"></script>
+    <script src="../js/tester-block.js"></script>
   </body>
 </html>
