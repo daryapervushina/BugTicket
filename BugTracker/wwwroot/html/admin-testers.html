@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../css/base.css" />
     <link rel="stylesheet" href="../css/components.css" />
     <link rel="stylesheet" href="../css/create-tester.css" />
+    <link rel="stylesheet" href="../css/tester-created.css" />
   </head>
   <body>
     <div class="page-screen">
@@ -23,7 +24,7 @@
       </button>
     </div>
 
-    <div class="modal-overlay">
+    <div class="modal-overlay" id="create-overlay">
       <div
         class="modal"
         role="dialog"
@@ -109,6 +110,71 @@
       </div>
     </div>
 
+    <div class="modal-overlay" id="created-overlay">
+      <div
+        class="modal modal--created"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="created-title"
+      >
+        <div class="modal__header">
+          <h1 class="modal__title" id="created-title">Аккаунт создан</h1>
+          <button
+            type="button"
+            class="modal__close"
+            aria-label="Закрыть"
+            data-close-created
+          >
+            <img src="../assets/icons/close.svg" alt="" />
+          </button>
+        </div>
+
+        <p class="modal__subtitle" id="created-user"></p>
+
+        <div class="modal-created__content">
+          <div class="password-field">
+            <span class="input-field__label">Временный пароль</span>
+            <div class="password-box">
+              <span class="password-box__value" id="created-password"></span>
+              <button
+                type="button"
+                class="button button--secondary"
+                id="copy-password-btn"
+              >
+                Скопировать
+              </button>
+            </div>
+          </div>
+
+          <div class="banner banner--warning">
+            <img
+              class="banner__icon"
+              src="../assets/icons/info-warning.svg"
+              alt=""
+            />
+            <div class="banner__body">
+              <p class="banner__title">Пароль больше не будет показан</p>
+              <p class="banner__text">
+                Сохраните его или передайте тестировщику сейчас. При первом
+                входе система попросит его сменить.
+              </p>
+            </div>
+          </div>
+
+          <div class="modal__actions">
+            <button
+              type="button"
+              class="button button--primary"
+              data-close-created
+            >
+              Готово
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="../js/create-tester.js"></script>
+    <script src="../js/tester-created.js"></script>
   </body>
 </html>

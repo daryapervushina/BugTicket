@@ -1,0 +1,53 @@
+.modal--created .modal__header {
+  margin-bottom: var(--space-16);
+}
+
+.modal__subtitle {
+  margin-bottom: 21px;
+  color: var(--text-secondary);
+  font-size: var(--font-size-14);
+  font-weight: 400;
+  line-height: normal;
+}
+
+.modal-created__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-20);
+}
+
+.password-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.password-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  min-height: 56px;
+  padding: 0 var(--space-8) 0 var(--space-16);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background-color: var(--background-subtle);
+}
+
+.password-box__value {
+  min-width: 0;
+  color: var(--text-primary);
+  font-size: var(--font-size-20);
+  font-weight: 700;
+  line-height: normal;
+  overflow-wrap: anywhere;
+}
+
+.password-box .button {
+  min-width: 135px;
+  flex-shrink: 0;
+}
+
+.modal-created__content .modal__actions {
+  margin-top: var(--space-4);
+}
