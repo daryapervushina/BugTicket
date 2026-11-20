@@ -39,4 +39,6 @@ form.addEventListener("submit", function (event) {
   if (submitButton.disabled) {
     return;
   }
+
+  window.location.href = "admin-testers.html";
 });

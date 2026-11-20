@@ -335,14 +335,14 @@
 
 .app-layout {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: 240px minmax(0, 1fr);
   min-height: 100vh;
 }
 
 .sidebar {
   display: flex;
   flex-direction: column;
-  padding: 28px 16px 20px;
+  padding: 20px 0 0;
   border-right: 1px solid var(--border-default);
   background: var(--background-surface);
 }
@@ -351,10 +351,11 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 8px;
+  padding: 0 24px;
   color: var(--text-primary);
-  font-size: var(--font-size-16);
+  font-size: var(--font-size-17);
   font-weight: 700;
+  line-height: normal;
 }
 
 .brand:hover {
@@ -363,38 +364,43 @@
 
 .brand__logo {
   display: grid;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   place-items: center;
   border-radius: var(--radius-md);
   background: var(--brand-primary);
   color: var(--text-on-accent);
-  font-size: 14px;
+  font-size: var(--font-size-17);
+  font-weight: 700;
+  line-height: normal;
 }
 
 .sidebar__nav {
-  margin-top: 34px;
+  margin-top: 32px;
+  padding: 0 12px;
 }
 
 .sidebar__caption {
-  margin-bottom: 8px;
-  padding: 0 8px;
+  margin-bottom: 7px;
+  padding: 0 12px;
   color: var(--text-tertiary);
-  font-size: 11px;
+  font-size: var(--font-size-11);
   font-weight: 600;
+  line-height: normal;
   text-transform: uppercase;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 38px;
-  padding: 0 10px;
+  gap: 12px;
+  height: 40px;
+  padding: 0 14px;
   border-radius: var(--radius-md);
   color: var(--text-secondary);
-  font-size: 13px;
-  font-weight: 500;
+  font-size: var(--font-size-14);
+  font-weight: 400;
+  line-height: normal;
 }
 
 .nav-item:hover {
@@ -405,6 +411,11 @@
 .nav-item--active {
   background: var(--brand-primary-subtle);
   color: var(--brand-primary);
+  font-weight: 600;
+}
+
+.nav-item--active:hover {
+  background: var(--brand-primary-subtle);
 }
 
 .nav-item img {
@@ -416,46 +427,63 @@
 
 .sidebar__profile {
   display: grid;
-  grid-template-columns: 30px minmax(0, 1fr);
-  gap: 8px;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: start;
+  column-gap: 8px;
   margin-top: auto;
-  padding: 16px 8px 0;
+  padding: 17px 24px 13px;
   border-top: 1px solid var(--border-default);
 }
 
 .avatar {
   display: grid;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   place-items: center;
   border-radius: 50%;
   background: var(--brand-primary-subtle);
   color: var(--brand-primary);
-  font-size: 10px;
+  font-size: var(--font-size-15);
   font-weight: 600;
+  line-height: normal;
 }
 
 .profile-info {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  font-size: 10px;
-  line-height: 14px;
+  gap: 3px;
+  font-size: var(--font-size-12);
+  line-height: normal;
 }
 
 .profile-info strong {
-  font-size: 11px;
+  color: var(--text-primary);
+  font-size: var(--font-size-14);
+  font-weight: 600;
+  line-height: normal;
 }
 
 .profile-info span {
   overflow: hidden;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
+  font-size: var(--font-size-12);
+  line-height: normal;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .profile-info a {
-  font-size: 10px;
+  font-size: var(--font-size-12);
+  font-weight: 500;
+  line-height: normal;
+}
+
+.profile-info .profile-role {
+  color: var(--brand-primary);
+  font-size: var(--font-size-12);
+  font-weight: 500;
+  line-height: normal;
 }
 
 .profile-actions {
@@ -463,33 +491,35 @@
   grid-column: 1 / -1;
   align-items: center;
   justify-content: space-between;
-  margin-top: 12px;
+  margin-top: 24px;
 }
 
 .logout-button {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 0;
+  gap: 12px;
+  height: 20px;
+  padding: 0 0 0 6px;
   border: 0;
   background: transparent;
   color: var(--text-secondary);
   font-family: inherit;
-  font-size: 11px;
-  line-height: 16px;
+  font-size: var(--font-size-14);
+  line-height: normal;
   cursor: pointer;
 }
 
 .logout-button img {
   display: block;
-  width: 14px;
-  height: 14px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
 }
 
 .change-role {
-  font-size: 10px;
-  line-height: 16px;
+  font-size: var(--font-size-12);
+  font-weight: 500;
+  line-height: normal;
 }
 
 .content-area {
