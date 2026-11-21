@@ -1,7 +1,72 @@
 .page-content {
+  padding: 32px 40px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.page-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.page-title {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.page-subtitle {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--font-size-14);
+  font-weight: 400;
+  line-height: normal;
+}
+
+.page-header .button {
+  border: 0;
+}
+
+.testers-filters {
+  margin-top: 41px;
+}
+
+.testers-filters .developer-search {
+  width: 360px;
+  max-width: 100%;
+  gap: 10px;
+  padding: 0 14px;
+}
+
+.testers-filters .developer-search img {
+  display: block;
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.testers-filters .developer-search input {
+  font-size: var(--font-size-14);
+  line-height: normal;
+}
+
+.testers-filters .developer-search input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.temp-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   gap: var(--space-12);
-  padding: var(--space-32);
+  margin-top: var(--space-20);
 }

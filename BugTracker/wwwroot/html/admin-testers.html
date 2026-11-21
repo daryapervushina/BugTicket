@@ -52,38 +52,68 @@
       </aside>
 
       <main class="content-area">
+        <header class="topbar">
+          <nav class="breadcrumbs" aria-label="Навигация">
+            <span>Администрирование</span>
+            <span>/</span>
+            <strong>Тестировщики</strong>
+          </nav>
+        </header>
+
         <div class="page-content">
-          <button
-            type="button"
-            class="button button--primary"
-            id="open-modal-btn"
-          >
-            Создать тестировщика
-          </button>
-          <button
-            type="button"
-            class="button button--text"
-            data-block-tester
-            data-tester-id="1"
-          >
-            Заблокировать
-          </button>
-          <button
-            type="button"
-            class="button button--text"
-            data-block-tester
-            data-tester-id="2"
-          >
-            Заблокировать
-          </button>
-          <button
-            type="button"
-            class="button button--text"
-            data-block-tester
-            data-tester-id="3"
-          >
-            Заблокировать
-          </button>
+          <div class="page-header">
+            <div class="page-header__text">
+              <h1 class="page-title">Тестировщики</h1>
+              <p class="page-subtitle">
+                Аккаунты тестировщиков создаёт только администратор
+              </p>
+            </div>
+            <button
+              type="button"
+              class="button button--primary"
+              id="open-modal-btn"
+            >
+              + Создать тестировщика
+            </button>
+          </div>
+
+          <div class="testers-filters">
+            <div class="developer-search">
+              <img src="../assets/icons/loupe.svg" alt="" />
+              <input
+                type="text"
+                placeholder="Поиск по имени или email"
+                aria-label="Поиск по имени или email"
+              />
+            </div>
+          </div>
+
+          <div class="temp-actions">
+            <button
+              type="button"
+              class="button button--text"
+              data-block-tester
+              data-tester-id="1"
+            >
+              Заблокировать
+            </button>
+            <button
+              type="button"
+              class="button button--text"
+              data-block-tester
+              data-tester-id="2"
+            >
+              Заблокировать
+            </button>
+            <button
+              type="button"
+              class="button button--text"
+              data-block-tester
+              data-tester-id="3"
+            >
+              Заблокировать
+            </button>
+          </div>
         </div>
       </main>
     </div>

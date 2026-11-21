@@ -532,23 +532,28 @@
   align-items: center;
   justify-content: space-between;
   height: 64px;
-  padding: 0 32px;
+  padding: 0 40px;
   border-bottom: 1px solid var(--border-default);
   background: var(--background-surface);
   color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 600;
+  font-size: var(--font-size-14);
+  font-weight: 400;
+  line-height: normal;
 }
 
 .breadcrumbs {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 10px;
   color: var(--text-secondary);
-  font-size: 12px;
+  font-size: var(--font-size-14);
+  font-weight: 400;
+  line-height: normal;
 }
 
 .breadcrumbs strong {
   color: var(--text-primary);
+  font-weight: 600;
 }
 
 .notification-button {
