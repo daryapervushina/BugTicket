@@ -232,3 +232,10 @@
     flex-direction: column;
   }
 }
+
+.ticket-params .filter-control:disabled {
+  cursor: not-allowed;
+  background-color: var(--background-subtle);
+  color: var(--text-secondary);
+  opacity: 1;
+}

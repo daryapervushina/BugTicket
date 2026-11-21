@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../css/variables.css" />
     <link rel="stylesheet" href="../css/base.css" />
     <link rel="stylesheet" href="../css/components.css" />
-    <link rel="stylesheet" href="../css/ticket_view.css" />
+    <link rel="stylesheet" href="../css/ticket_view_noInCharge.css" />
   </head>
 
   <body>
@@ -174,7 +174,11 @@
               <div class="parameter">
                 <span>Статус бага</span>
 
-                <select class="filter-control filter-select" id="bug-status-select">
+                <select
+                  class="filter-control filter-select"
+                  id="bug-status-select"
+                  disabled
+                >
                   <option value="Не исправлен" selected>Не исправлен</option>
                   <option value="В разработке">В разработке</option>
                   <option value="Исправлен">Исправлен</option>
@@ -275,6 +279,6 @@
       </div>
     </div>
 
-    <script src="../js/ticket_view.js"></script>
+    <script src="../js/ticket_view_noInCharge.js"></script>
   </body>
 </html>
