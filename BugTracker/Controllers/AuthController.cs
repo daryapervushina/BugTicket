@@ -1,3 +1,4 @@
+using BugTracker.Common;
 using Microsoft.AspNetCore.Authorization;
 using BugTracker.DTOs.Auth;
 using BugTracker.Services;
@@ -40,6 +41,18 @@ namespace BugTracker.Controllers
 
             var response = await _authService.SwitchRoleAsync(userId, request);
             return Ok(response);
+        }
+        [Authorize(Roles = "Tester")]
+        [AllowTemporaryPassword]
+        [HttpPost("change-password")]
+        public async Task<ActionResult<LoginResponse>> ChangePassword(ChangePasswordRequest request)
+        {
+            if (!int.TryParse(User.FindFirst("sub")?.Value, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            return Ok(await _authService.ChangePasswordAsync(userId, request));
         }
     }
 }

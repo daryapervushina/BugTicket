@@ -18,7 +18,7 @@ namespace BugTracker.DTOs.Projects
                 || (uri.Scheme != Uri.UriSchemeHttps && uri.Scheme != Uri.UriSchemeHttp)
                 || (uri.Host != "github.com" && uri.Host != "gitlab.com"))
             {
-                yield return new ValidationResult("Укажи ссылку на GitHub или GitLab.", new[] { nameof(RepositoryUrl) });
+                yield return new ValidationResult("Enter a GitHub or GitLab URL.", new[] { nameof(RepositoryUrl) });
             }
         }
     }

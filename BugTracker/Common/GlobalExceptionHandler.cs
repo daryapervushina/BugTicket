@@ -20,6 +20,7 @@ namespace BugTracker.Common
         {
             var (statusCode, title) = exception switch
             {
+                NotFoundException => (StatusCodes.Status404NotFound, "Not Found"),
                 ValidationException => (StatusCodes.Status422UnprocessableEntity, "Unprocessable Entity"),
                 InvalidCredentialsException => (StatusCodes.Status401Unauthorized, "Unauthorized"),
                 ForbiddenException => (StatusCodes.Status403Forbidden, "Forbidden"),
