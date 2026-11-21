@@ -825,3 +825,32 @@
   flex-shrink: 0;
   object-fit: contain;
 }
+
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--status-info);
+  border-radius: var(--radius-lg);
+  background: var(--status-info-subtle);
+}
+
+.info-banner__icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  object-fit: contain;
+}
+
+.info-banner__content {
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.info-banner__content strong {
+  display: block;
+  color: var(--text-primary);
+  font-weight: 600;
+}
