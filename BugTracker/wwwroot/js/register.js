@@ -9,10 +9,23 @@ const emailError = document.getElementById("email-error");
 const passwordError = document.getElementById("password-error");
 const submitButton = form.querySelector('button[type="submit"]');
 
+const API_BASE_URL = "";
+const REGISTER_URL = API_BASE_URL + "/api/auth/register";
+const LOGIN_PAGE = "login.html";
+
 const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PASSWORD_PATTERN = /^(?=.*[A-Za-zА-Яа-яЁё])(?=.*\d).{8,}$/;
 const EMAIL_INVALID_TEXT = "Введите корректный email";
 const EMAIL_TAKEN_TEXT = "Пользователь с таким email уже существует";
+const BAD_DATA_TEXT = "Проверьте введённые данные";
+const SERVER_ERROR_TEXT = "Не удалось зарегистрироваться. Попробуйте позже";
+
+const formError = document.createElement("p");
+formError.className = "input-field__error";
+formError.hidden = true;
+submitButton.before(formError);
+
+let isSubmitting = false;
 
 function isEmailValid() {
   return EMAIL_PATTERN.test(emailInput.value.trim());
@@ -33,12 +46,21 @@ function isFormValid() {
 }
 
 function updateSubmitState() {
-  submitButton.disabled = !isFormValid();
+  submitButton.disabled = isSubmitting || !isFormValid();
 }
 
 function setFieldError(field, errorElement, hasError) {
   field.classList.toggle("input-field--error", hasError);
   errorElement.hidden = !hasError;
+}
+
+function showFormError(text) {
+  formError.textContent = text;
+  formError.hidden = false;
+}
+
+function hideFormError() {
+  formError.hidden = true;
 }
 
 function updateEmailFormatError() {
@@ -60,10 +82,33 @@ function showEmailTaken() {
   updateSubmitState();
 }
 
-lastNameInput.addEventListener("input", updateSubmitState);
-firstNameInput.addEventListener("input", updateSubmitState);
+async function registerUser() {
+  const response = await fetch(REGISTER_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      firstName: firstNameInput.value.trim(),
+      lastName: lastNameInput.value.trim(),
+      email: emailInput.value.trim(),
+      password: passwordInput.value,
+    }),
+  });
+
+  return response;
+}
+
+lastNameInput.addEventListener("input", function () {
+  hideFormError();
+  updateSubmitState();
+});
+
+firstNameInput.addEventListener("input", function () {
+  hideFormError();
+  updateSubmitState();
+});
 
 emailInput.addEventListener("input", function () {
+  hideFormError();
   if (!emailError.hidden) {
     updateEmailFormatError();
   }
@@ -76,14 +121,41 @@ emailInput.addEventListener("blur", function () {
 });
 
 passwordInput.addEventListener("input", function () {
+  hideFormError();
   updatePasswordError();
   updateSubmitState();
 });
 
-form.addEventListener("submit", function (event) {
+form.addEventListener("submit", async function (event) {
   event.preventDefault();
 
-  if (!isFormValid()) {
+  if (isSubmitting || !isFormValid()) {
     return;
   }
+
+  isSubmitting = true;
+  hideFormError();
+  updateSubmitState();
+
+  try {
+    const response = await registerUser();
+
+    if (response.ok) {
+      window.location.href = LOGIN_PAGE;
+      return;
+    }
+
+    if (response.status === 409) {
+      showEmailTaken();
+    } else if (response.status === 400 || response.status === 422) {
+      showFormError(BAD_DATA_TEXT);
+    } else {
+      showFormError(SERVER_ERROR_TEXT);
+    }
+  } catch (error) {
+    showFormError(SERVER_ERROR_TEXT);
+  }
+
+  isSubmitting = false;
+  updateSubmitState();
 });
