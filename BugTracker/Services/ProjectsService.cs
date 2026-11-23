@@ -1,3 +1,4 @@
+using System.Data;
 using BugTracker.Common.Exceptions;
 using BugTracker.Data;
 using BugTracker.DTOs.Projects;
@@ -76,6 +77,72 @@ namespace BugTracker.Services
                     PublishedAt = project.PublishedAt
                 })
                 .ToListAsync();
+        }
+
+        public async Task<ProjectResponse> UpdateAsync(int projectId, int userId, UpdateProjectRequest request)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+
+            var projects = await _db.Projects
+                .FromSqlInterpolated($@"SELECT * FROM ""Projects"" WHERE ""Id"" = {projectId} FOR UPDATE")
+                .ToListAsync();
+            var project = projects.SingleOrDefault()
+                ?? throw new NotFoundException("Project not found.");
+
+            await _db.Entry(project).Collection(project => project.Members).LoadAsync();
+
+            if (project.AuthorId != userId
+                && (project.PublishedAt == null || !project.Members.Any(member => member.UserId == userId)))
+            {
+                throw new ForbiddenException("You do not have permission to edit this project.");
+            }
+
+            if (request.Name != null)
+            {
+                project.Name = request.Name.Trim();
+            }
+
+            if (request.DeveloperIds != null)
+            {
+                var developerIds = request.DeveloperIds.Append(project.AuthorId).Distinct().ToList();
+                var developerCount = await _db.Users.CountAsync(user => developerIds.Contains(user.Id)
+                    && user.Roles.Any(role => role.Role == Role.Developer));
+
+                if (developerCount != developerIds.Count)
+                {
+                    throw new ValidationException("All selected users must have the developer role.");
+                }
+
+                var removedMembers = project.Members
+                    .Where(member => !developerIds.Contains(member.UserId)).ToList();
+
+                foreach (var member in removedMembers)
+                {
+                    _db.ProjectMembers.Remove(member);
+                    project.Members.Remove(member);
+                }
+
+                foreach (var developerId in developerIds)
+                {
+                    if (!project.Members.Any(member => member.UserId == developerId))
+                    {
+                        project.Members.Add(new ProjectMember { UserId = developerId });
+                    }
+                }
+            }
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex) when (ex.InnerException is PostgresException
+                { SqlState: PostgresErrorCodes.UniqueViolation, ConstraintName: "PK_ProjectMembers" })
+            {
+                throw new ConflictException("Project members have changed. Refresh the project and retry.");
+            }
+
+            await transaction.CommitAsync();
+            return ToResponse(project);
         }
 
         public async Task<ProjectResponse> CreateAsync(int authorId, Guid idempotencyKey, CreateProjectRequest request)

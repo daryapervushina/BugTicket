@@ -37,6 +37,14 @@ namespace BugTracker.Controllers
         }
 
         [Authorize(Roles = "Developer")]
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult<ProjectResponse>> Update(int id, [FromBody] UpdateProjectRequest request)
+        {
+            var userId = int.Parse(User.FindFirst("sub")!.Value);
+            return Ok(await _service.UpdateAsync(id, userId, request));
+        }
+
+        [Authorize(Roles = "Developer")]
         [HttpPost]
         public async Task<ActionResult<ProjectResponse>> Create(
             [FromHeader(Name = "Idempotency-Key"), Required] Guid? idempotencyKey,
