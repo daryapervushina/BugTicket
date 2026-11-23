@@ -113,7 +113,7 @@ namespace BugTracker.Services
 
         private static string CreatePassword()
         {
-            return Convert.ToHexString(RandomNumberGenerator.GetBytes(12)) + "a1!";
+            return Convert.ToHexString(RandomNumberGenerator.GetBytes(12)) ;
         }
 
         private static TesterResponse ToResponse(User user)

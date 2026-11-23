@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BugTracker.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261121081318_InitialCreate")]
+    [Migration("20261123103618_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -39,6 +39,15 @@ namespace BugTracker.Migrations
                     b.Property<DateTimeOffset?>("CheckedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreationRequestHash")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("CreationRequestId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -52,7 +61,8 @@ namespace BugTracker.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AuthorId", "CreationRequestId")
+                        .IsUnique();
 
                     b.ToTable("Projects");
                 });
@@ -70,6 +80,68 @@ namespace BugTracker.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ProjectMembers");
+                });
+
+            modelBuilder.Entity("BugTracker.Models.Ticket", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("AssigneeId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BugStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("ClosedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("Deadline")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Priority")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Release")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ReviewStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Steps")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssigneeId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("BugTracker.Models.User", b =>
@@ -156,6 +228,32 @@ namespace BugTracker.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BugTracker.Models.Ticket", b =>
+                {
+                    b.HasOne("BugTracker.Models.User", "Assignee")
+                        .WithMany()
+                        .HasForeignKey("AssigneeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("BugTracker.Models.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BugTracker.Models.Project", "Project")
+                        .WithMany("Tickets")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Assignee");
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("BugTracker.Models.UserRole", b =>
                 {
                     b.HasOne("BugTracker.Models.User", "User")
@@ -170,6 +268,8 @@ namespace BugTracker.Migrations
             modelBuilder.Entity("BugTracker.Models.Project", b =>
                 {
                     b.Navigation("Members");
+
+                    b.Navigation("Tickets");
                 });
 
             modelBuilder.Entity("BugTracker.Models.User", b =>
