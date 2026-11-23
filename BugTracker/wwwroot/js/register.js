@@ -11,6 +11,11 @@ const submitButton = form.querySelector('button[type="submit"]');
 
 const API_BASE_URL = "";
 const REGISTER_URL = API_BASE_URL + "/api/auth/register";
+const LOGIN_URL = API_BASE_URL + "/api/auth/login";
+const TOKEN_KEY = "bugtracker_token";
+const ROLE_KEY = "bugtracker_role";
+const DEVELOPER_ROLE = "Developer";
+const DEV_PROJECTS_PAGE = "dev_projects.html";
 const LOGIN_PAGE = "login.html";
 
 const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -83,7 +88,7 @@ function showEmailTaken() {
 }
 
 async function registerUser() {
-  const response = await fetch(REGISTER_URL, {
+  return fetch(REGISTER_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -93,8 +98,32 @@ async function registerUser() {
       password: passwordInput.value,
     }),
   });
+}
 
-  return response;
+async function signInAfterRegister() {
+  try {
+    const response = await fetch(LOGIN_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: emailInput.value.trim(),
+        password: passwordInput.value,
+        role: DEVELOPER_ROLE,
+      }),
+    });
+
+    if (!response.ok) {
+      return false;
+    }
+
+    const data = await response.json();
+
+    localStorage.setItem(TOKEN_KEY, data.token);
+    localStorage.setItem(ROLE_KEY, data.role);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 lastNameInput.addEventListener("input", function () {
@@ -141,7 +170,9 @@ form.addEventListener("submit", async function (event) {
     const response = await registerUser();
 
     if (response.ok) {
-      window.location.href = LOGIN_PAGE;
+      const signedIn = await signInAfterRegister();
+
+      window.location.href = signedIn ? DEV_PROJECTS_PAGE : LOGIN_PAGE;
       return;
     }
 
