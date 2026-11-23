@@ -20,26 +20,21 @@ namespace BugTracker.Services
             _db = db;
         }
 
-        public async Task<List<ProjectResponse>> GetDeveloperProjectsAsync(int userId)
+        public async Task<List<ProjectListItemResponse>> GetDeveloperProjectsAsync(int userId)
         {
             return await _db.Projects.AsNoTracking()
                 .Where(project => project.AuthorId == userId
                     || (project.PublishedAt != null
                         && project.Members.Any(member => member.UserId == userId)))
                 .OrderBy(project => project.PublishedAt != null)
-                .ThenByDescending(project => project.CreatedAt)
+                .ThenByDescending(project => project.PublishedAt ?? project.CreatedAt)
                 .ThenByDescending(project => project.Id)
-                .Select(project => new ProjectResponse
+                .Select(project => new ProjectListItemResponse
                 {
                     Id = project.Id,
                     Name = project.Name,
                     RepositoryUrl = project.RepositoryUrl,
-                    AuthorId = project.AuthorId,
-                    DeveloperIds = project.Members.Select(member => member.UserId)
-                        .OrderBy(id => id).ToList(),
-                    CreatedAt = project.CreatedAt,
-                    PublishedAt = project.PublishedAt,
-                    CheckedAt = project.CheckedAt
+                    PublishedAt = project.PublishedAt
                 })
                 .ToListAsync();
         }

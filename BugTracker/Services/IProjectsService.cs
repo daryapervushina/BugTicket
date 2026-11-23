@@ -4,7 +4,7 @@ namespace BugTracker.Services
 {
     public interface IProjectsService
     {
-        Task<List<ProjectResponse>> GetDeveloperProjectsAsync(int userId);
+        Task<List<ProjectListItemResponse>> GetDeveloperProjectsAsync(int userId);
         Task<ProjectResponse> CreateAsync(int authorId, Guid idempotencyKey, CreateProjectRequest request);
     }
 }
