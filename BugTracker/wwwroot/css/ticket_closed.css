@@ -1,0 +1,10 @@
+.ticket-params .merge-request-chip {
+  justify-content: flex-start;
+}
+
+.ticket-params .merge-request-chip img {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
