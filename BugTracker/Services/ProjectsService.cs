@@ -79,7 +79,25 @@ namespace BugTracker.Services
                 .ToListAsync();
         }
 
-        public async Task<ProjectResponse> UpdateAsync(int projectId, int userId, UpdateProjectRequest request)
+        public async Task<List<TesterProjectListItemResponse>> GetTesterProjectsAsync()
+        {
+            return await _db.Projects.AsNoTracking()
+                .Where(project => project.PublishedAt != null)
+                .OrderByDescending(project => project.PublishedAt)
+                .ThenByDescending(project => project.Id)
+                .Select(project => new TesterProjectListItemResponse
+                {
+                    Id = project.Id,
+                    Name = project.Name,
+                    RepositoryUrl = project.RepositoryUrl,
+                    PublishedAt = project.PublishedAt,
+                    CheckedAt = project.CheckedAt,
+                    OpenTicketsCount = project.Tickets.Count(ticket => ticket.ReviewStatus != ReviewStatus.Fixed)
+                })
+                .ToListAsync();
+        }
+
+        public async Task<ProjectResponse> PublishAsync(int projectId, int userId)
         {
             await using var transaction = await _db.Database.BeginTransactionAsync();
 
@@ -91,10 +109,66 @@ namespace BugTracker.Services
 
             await _db.Entry(project).Collection(project => project.Members).LoadAsync();
 
-            if (project.AuthorId != userId
-                && (project.PublishedAt == null || !project.Members.Any(member => member.UserId == userId)))
+            if (project.AuthorId != userId)
+            {
+                throw new ForbiddenException("You do not have permission to publish this project.");
+            }
+
+            if (project.PublishedAt != null)
+            {
+                throw new ConflictException("Project is already published.");
+            }
+
+            project.PublishedAt = DateTimeOffset.UtcNow;
+            await _db.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return ToResponse(project);
+        }
+
+        public async Task<ProjectResponse> UpdateAsync(int projectId, int userId, Role role, UpdateProjectRequest request)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+
+            var projects = await _db.Projects
+                .FromSqlInterpolated($@"SELECT * FROM ""Projects"" WHERE ""Id"" = {projectId} FOR UPDATE")
+                .ToListAsync();
+            var project = projects.SingleOrDefault()
+                ?? throw new NotFoundException("Project not found.");
+
+            await _db.Entry(project).Collection(project => project.Members).LoadAsync();
+
+            if (role == Role.Tester)
+            {
+                if (project.PublishedAt == null)
+                {
+                    throw new ForbiddenException("Only published projects can be marked as checked.");
+                }
+                if (request.Name != null || request.DeveloperIds != null)
+                {
+                    throw new ForbiddenException("Testers cannot change the project name or members.");
+                }
+            }
+            else if (role == Role.Developer)
+            {
+                if (request.IsChecked != null)
+                {
+                    throw new ForbiddenException("Only testers can mark projects as checked.");
+                }
+                if (project.AuthorId != userId
+                    && (project.PublishedAt == null || !project.Members.Any(member => member.UserId == userId)))
+                {
+                    throw new ForbiddenException("You do not have permission to edit this project.");
+                }
+            }
+            else
             {
                 throw new ForbiddenException("You do not have permission to edit this project.");
+            }
+
+            if (request.IsChecked == true)
+            {
+                project.CheckedAt = DateTimeOffset.UtcNow;
             }
 
             if (request.Name != null)

@@ -19,6 +19,14 @@ namespace BugTracker.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Developer")]
+        [HttpPost("{id:int}/publish")]
+        public async Task<ActionResult<ProjectResponse>> Publish(int id)
+        {
+            var userId = int.Parse(User.FindFirst("sub")!.Value);
+            return Ok(await _service.PublishAsync(id, userId));
+        }
+
         [Authorize(Roles = "Developer,Tester")]
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ProjectDetailsResponse>> GetById(int id)
@@ -28,20 +36,27 @@ namespace BugTracker.Controllers
             return Ok(await _service.GetByIdAsync(id, userId, role));
         }
 
-        [Authorize(Roles = "Developer")]
+        [Authorize(Roles = "Developer,Tester")]
         [HttpGet]
-        public async Task<ActionResult<List<ProjectListItemResponse>>> GetDeveloperProjects()
+        public async Task<IActionResult> GetProjects()
         {
+            var role = Enum.Parse<Role>(User.FindFirst("role")!.Value);
+            if (role == Role.Tester)
+            {
+                return Ok(await _service.GetTesterProjectsAsync());
+            }
+
             var userId = int.Parse(User.FindFirst("sub")!.Value);
             return Ok(await _service.GetDeveloperProjectsAsync(userId));
         }
 
-        [Authorize(Roles = "Developer")]
+        [Authorize(Roles = "Developer,Tester")]
         [HttpPatch("{id:int}")]
         public async Task<ActionResult<ProjectResponse>> Update(int id, [FromBody] UpdateProjectRequest request)
         {
             var userId = int.Parse(User.FindFirst("sub")!.Value);
-            return Ok(await _service.UpdateAsync(id, userId, request));
+            var role = Enum.Parse<Role>(User.FindFirst("role")!.Value);
+            return Ok(await _service.UpdateAsync(id, userId, role, request));
         }
 
         [Authorize(Roles = "Developer")]

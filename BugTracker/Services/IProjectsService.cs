@@ -7,7 +7,9 @@ namespace BugTracker.Services
     {
         Task<ProjectDetailsResponse> GetByIdAsync(int projectId, int userId, Role role);
         Task<List<ProjectListItemResponse>> GetDeveloperProjectsAsync(int userId);
-        Task<ProjectResponse> UpdateAsync(int projectId, int userId, UpdateProjectRequest request);
+        Task<List<TesterProjectListItemResponse>> GetTesterProjectsAsync();
+        Task<ProjectResponse> PublishAsync(int projectId, int userId);
+        Task<ProjectResponse> UpdateAsync(int projectId, int userId, Role role, UpdateProjectRequest request);
         Task<ProjectResponse> CreateAsync(int authorId, Guid idempotencyKey, CreateProjectRequest request);
     }
 }
