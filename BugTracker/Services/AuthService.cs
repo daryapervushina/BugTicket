@@ -66,18 +66,83 @@ namespace BugTracker.Services
                 throw new InvalidCredentialsException("Invalid email or password.");
             }
 
-            if (user.IsBlocked)
-            {
-                throw new AccountBlockedException("Account is blocked.");
-            }
-
             if (!user.Roles.Any(userRole => userRole.Role == request.Role))
             {
                 throw new RoleForbiddenException("Role is not assigned to this user.");
             }
 
-            var token = _tokenGenerator.Generate(user.Id, request.Role);
+            var assignedRole = user.Roles.Single(role => role.Role == request.Role);
+            if (assignedRole.IsBlocked)
+            {
+                throw new RoleForbiddenException("The selected role is blocked.");
+            }
+
+            var token = _tokenGenerator.Generate(user.Id, request.Role, user.SessionVersion);
             return new LoginResponse(token, request.Role.ToString(), user.MustChangePassword);
+        }
+        public async Task<LoginResponse> SwitchRoleAsync(int userId, SwitchRoleRequest request)
+        {
+            var user = await _db.Users.AsNoTracking()
+                .Include(user => user.Roles)
+                .SingleOrDefaultAsync(user => user.Id == userId);
+
+            if (user == null)
+            {
+                throw new InvalidCredentialsException("User no longer exists.");
+            }
+
+            if (user.MustChangePassword)
+            {
+                throw new ForbiddenException("Change the temporary password before switching roles.");
+            }
+
+            if (request.Role != Role.Developer && request.Role != Role.Tester)
+            {
+                throw new RoleForbiddenException("Only developer and tester roles can be switched.");
+            }
+
+            if (!user.Roles.Any(role => role.Role == Role.Developer)
+                || !user.Roles.Any(role => role.Role == Role.Tester))
+            {
+                throw new RoleForbiddenException("Both developer and tester roles are required.");
+            }
+
+            var assignedRole = user.Roles.Single(role => role.Role == request.Role);
+            if (assignedRole.IsBlocked)
+            {
+                throw new RoleForbiddenException("The selected role is blocked.");
+            }
+
+            var token = _tokenGenerator.Generate(user.Id, request.Role, user.SessionVersion);
+            return new LoginResponse(token, request.Role.ToString(), user.MustChangePassword);
+        }
+        public async Task<LoginResponse> ChangePasswordAsync(int userId, ChangePasswordRequest request)
+        {
+            var user = await _db.Users.Include(user => user.Roles).SingleOrDefaultAsync(user => user.Id == userId)
+                ?? throw new InvalidCredentialsException("User no longer exists.");
+
+            if (user.Roles.Any(role => role.Role == Role.Tester && role.IsBlocked))
+            {
+                throw new RoleForbiddenException("The tester role is blocked.");
+            }
+            if (!user.MustChangePassword)
+            {
+                throw new ConflictException("Temporary password has already been changed.");
+            }
+            if (_passwordHasher.VerifyHashedPassword(user, user.PasswordHash, request.NewPassword)
+                != PasswordVerificationResult.Failed)
+            {
+                throw new ValidationException("The new password must differ from the temporary password.");
+            }
+
+            user.PasswordHash = _passwordHasher.HashPassword(user, request.NewPassword);
+            user.MustChangePassword = false;
+            user.SessionVersion++;
+            await _db.SaveChangesAsync();
+
+            return new LoginResponse(
+                _tokenGenerator.Generate(user.Id, Role.Tester, user.SessionVersion),
+                Role.Tester.ToString(), false);
         }
     }
 }

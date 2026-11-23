@@ -2,10 +2,8 @@ using BugTracker.Models.Enums;
 using BugTracker.Options;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 using System.Text;
 
 namespace BugTracker.Services
@@ -19,12 +17,13 @@ namespace BugTracker.Services
             _options = options.Value;
         }
 
-        public string Generate (int userId, Role userRole)
+        public string Generate (int userId, Role userRole, int sessionVersion)
         {
             var claims = new[]
             {
                 new Claim("sub", userId.ToString()),
-                new Claim("role",userRole.ToString())
+                new Claim("role",userRole.ToString()),
+                new Claim("session_version", sessionVersion.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));

@@ -1,0 +1,58 @@
+using BugTracker.Common;
+using Microsoft.AspNetCore.Authorization;
+using BugTracker.DTOs.Auth;
+using BugTracker.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BugTracker.Controllers
+{
+    [ApiController]
+    [Route("api/auth")]
+    public class AuthController : ControllerBase
+    {
+        private readonly IAuthService _authService;
+
+        public AuthController(IAuthService authService)
+        {
+            _authService = authService;
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult<UserResponse>> Register(RegisterRequest request)
+        {
+            var user = await _authService.RegisterAsync(request);
+            return StatusCode(StatusCodes.Status201Created, user);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<LoginResponse>> Login(LoginRequest request)
+        {
+            var response = await _authService.LoginAsync(request);
+            return Ok(response);
+        }
+        [Authorize(Roles = "Developer,Tester")]
+        [HttpPost("switch-role")]
+        public async Task<ActionResult<LoginResponse>> SwitchRole(SwitchRoleRequest request)
+        {
+            if (!int.TryParse(User.FindFirst("sub")?.Value, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            var response = await _authService.SwitchRoleAsync(userId, request);
+            return Ok(response);
+        }
+        [Authorize(Roles = "Tester")]
+        [AllowTemporaryPassword]
+        [HttpPost("change-password")]
+        public async Task<ActionResult<LoginResponse>> ChangePassword(ChangePasswordRequest request)
+        {
+            if (!int.TryParse(User.FindFirst("sub")?.Value, out var userId))
+            {
+                return Unauthorized();
+            }
+
+            return Ok(await _authService.ChangePasswordAsync(userId, request));
+        }
+    }
+}
