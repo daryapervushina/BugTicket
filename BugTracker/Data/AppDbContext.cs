@@ -10,6 +10,7 @@ namespace BugTracker.Data
         {
         }
 
+        public DbSet<Ticket> Tickets => Set<Ticket>();
         public DbSet<User> Users => Set<User>();
         public DbSet<UserRole> UserRoles => Set<UserRole>();
         public DbSet<Project> Projects => Set<Project>();
@@ -18,6 +19,25 @@ namespace BugTracker.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Ticket>().Property(ticket => ticket.Title).HasMaxLength(100);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(ticket => ticket.Project)
+                .WithMany(project => project.Tickets)
+                .HasForeignKey(ticket => ticket.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(ticket => ticket.Author)
+                .WithMany()
+                .HasForeignKey(ticket => ticket.AuthorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(ticket => ticket.Assignee)
+                .WithMany()
+                .HasForeignKey(ticket => ticket.AssigneeId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Project>()
                 .HasIndex(project => new { project.AuthorId, project.CreationRequestId })

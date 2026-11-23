@@ -14,10 +14,49 @@ namespace BugTracker.Services
     public class ProjectsService : IProjectsService
     {
         private readonly AppDbContext _db;
+        private readonly ITicketsService _ticketsService;
 
-        public ProjectsService(AppDbContext db)
+        public ProjectsService(AppDbContext db, ITicketsService ticketsService)
         {
             _db = db;
+            _ticketsService = ticketsService;
+        }
+
+        public async Task<ProjectDetailsResponse> GetByIdAsync(int projectId, int userId, Role role)
+        {
+            var project = await _db.Projects.AsNoTracking()
+                .Include(project => project.Members)
+                .SingleOrDefaultAsync(project => project.Id == projectId)
+                ?? throw new NotFoundException("Project not found.");
+
+            var canRead = project.PublishedAt == null
+                ? role == Role.Developer && project.AuthorId == userId
+                : role == Role.Tester || (role == Role.Developer
+                    && (project.AuthorId == userId || project.Members.Any(member => member.UserId == userId)));
+
+            if (!canRead)
+            {
+                throw new ForbiddenException("You do not have access to this project.");
+            }
+
+            var response = new ProjectDetailsResponse
+            {
+                Id = project.Id,
+                Name = project.Name,
+                RepositoryUrl = project.RepositoryUrl,
+                AuthorId = project.AuthorId,
+                DeveloperIds = project.Members.Select(member => member.UserId).OrderBy(id => id).ToList(),
+                CreatedAt = project.CreatedAt,
+                PublishedAt = project.PublishedAt,
+                CheckedAt = project.CheckedAt
+            };
+
+            if (project.PublishedAt != null)
+            {
+                response.Tickets = await _ticketsService.GetProjectTicketsAsync(project.Id);
+            }
+
+            return response;
         }
 
         public async Task<List<ProjectListItemResponse>> GetDeveloperProjectsAsync(int userId)

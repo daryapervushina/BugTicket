@@ -1,3 +1,4 @@
+using BugTracker.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using BugTracker.DTOs.Projects;
 using BugTracker.Services;
@@ -16,6 +17,15 @@ namespace BugTracker.Controllers
         public ProjectsController(IProjectsService service)
         {
             _service = service;
+        }
+
+        [Authorize(Roles = "Developer,Tester")]
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ProjectDetailsResponse>> GetById(int id)
+        {
+            var userId = int.Parse(User.FindFirst("sub")!.Value);
+            var role = Enum.Parse<Role>(User.FindFirst("role")!.Value);
+            return Ok(await _service.GetByIdAsync(id, userId, role));
         }
 
         [Authorize(Roles = "Developer")]

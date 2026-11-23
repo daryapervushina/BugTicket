@@ -12,6 +12,7 @@ namespace BugTracker.Models
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset? PublishedAt { get; set; }
         public DateTimeOffset? CheckedAt { get; set; }
+        public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
         public ICollection<ProjectMember> Members { get; set; } = new List<ProjectMember>();
     }
 }
