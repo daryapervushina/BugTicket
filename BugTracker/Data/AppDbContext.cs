@@ -19,6 +19,10 @@ namespace BugTracker.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Project>()
+                .HasIndex(project => new { project.AuthorId, project.CreationRequestId })
+                .IsUnique();
+
             modelBuilder.Entity<User>()
                 .HasIndex(user => user.Email)
                 .IsUnique();
