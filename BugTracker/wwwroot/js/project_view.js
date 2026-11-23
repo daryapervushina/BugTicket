@@ -199,7 +199,16 @@ function renderTickets() {
       <td class="data-table__number">#${ticket.number}</td>
 
       <td>
-        <a class="data-table__link" href="ticket_view.html">
+        <a
+          class="data-table__link"
+          href="${
+            ticket.number === 13
+            ? "ticket_in_progress.html"
+            : ticket.number === 12
+              ? "ticket_pending_review.html"
+              : "ticket_view.html"
+            }"
+        >
           ${ticket.title}
         </a>
       </td>

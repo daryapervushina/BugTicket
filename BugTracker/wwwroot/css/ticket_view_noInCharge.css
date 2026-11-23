@@ -75,17 +75,6 @@
   margin-top: 18px;
 }
 
-.ticket-card {
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg);
-  background: var(--background-surface);
-}
-
-.ticket-card h2 {
-  margin-bottom: 18px;
-  font-size: var(--font-size-16);
-}
-
 .ticket-description {
   padding: 22px;
 }

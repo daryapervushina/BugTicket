@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Тикет #12 — BugTracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/ticket_in_progress.css" />
+  </head>
+
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <a class="brand" href="dev_projects.html">
+          <span class="brand__logo">B</span>
+          <span>BugTracker</span>
+        </a>
+
+        <nav class="sidebar__nav">
+          <p class="sidebar__caption">Меню</p>
+
+          <a class="nav-item nav-item--active" href="dev_projects.html">
+            <img src="../assets/icons/folder.svg" alt="" />
+            <span>Мои проекты</span>
+          </a>
+        </nav>
+
+        <div class="sidebar__profile">
+          <div class="avatar">ИП</div>
+
+          <div class="profile-info">
+            <strong>Иван Петров</strong>
+            <span>i.petrov@stud.tsu.ru</span>
+            <span class="profile-role">Роль: Разработчик</span>
+          </div>
+
+          <div class="profile-actions">
+            <button class="logout-button" type="button">
+              <img src="../assets/icons/log-out.svg" alt="" />
+              Выйти
+            </button>
+
+            <a class="change-role" href="#">Сменить роль</a>
+          </div>
+        </div>
+      </aside>
+
+      <div class="content-area">
+        <header class="topbar">
+          <div class="breadcrumbs">
+            <a href="dev_projects.html">Проекты</a>
+            <span>/</span>
+            <a href="project_view.html">Интернет-магазин «Ромашка»</a>
+            <span>/</span>
+            <strong>Тикет #12</strong>
+          </div>
+
+          <button class="notification-button" type="button" aria-label="Уведомления">
+            <img src="../assets/icons/bell.svg" alt="" />
+            <span class="notification-count">2</span>
+          </button>
+        </header>
+
+        <main class="ticket-work-page">
+          <a class="back-link" href="project_view.html">
+            <img src="../assets/icons/arrowLeft.svg" alt="" />
+            К проекту
+          </a>
+
+          <div class="ticket-heading">
+            <div>
+              <h1>#12 Не работает кнопка «Подтвердить заказ»</h1>
+
+              <div class="ticket-heading__meta">
+                <span>Создан 22.10.2026 14:32 · Анна Смирнова</span>
+                <span class="chip chip--success" id="header-status">Исправлен</span>
+                <span class="chip chip--outline">Не исправлен</span>
+                <span class="chip chip--danger">Высокий</span>
+              </div>
+            </div>
+
+            <div class="ticket-heading__actions">
+              <button class="button button--primary" id="save-ticket">
+                Сохранить тикет
+              </button>
+            </div>
+          </div>
+
+          <section class="info-banner">
+            <img class="info-banner__icon" src="../assets/icons/i.svg" alt="" />
+
+            <div class="info-banner__content">
+              <strong>Ожидает проверки тестировщиком</strong>
+              Анна Смирнова получила уведомление. После проверки тикет будет
+              закрыт или вернётся к вам.
+            </div>
+          </section>
+
+          <div class="ticket-work-layout">
+            <div class="ticket-work-main">
+              <section class="ticket-card ticket-description">
+                <h2>Описание бага</h2>
+
+                <div class="description-block">
+                  <div class="description-block__heading">
+                    <span>Описание</span>
+                    <img
+                      class="lock-icon"
+                      src="../assets/icons/Lock.svg"
+                      alt="Недоступно для редактирования"
+                    />
+                  </div>
+
+                  <p>
+                    На странице оформления заказа кнопка «Подтвердить заказ»
+                    не реагирует на нажатие. Заказ не создаётся, ошибок на
+                    экране нет. В консоли браузера — ошибка 500 от POST
+                    /api/orders.
+                  </p>
+                </div>
+
+                <div class="description-block">
+                  <div class="description-block__heading">
+                    <span>Шаги воспроизведения</span>
+                    <img
+                      class="lock-icon"
+                      src="../assets/icons/Lock.svg"
+                      alt="Недоступно для редактирования"
+                    />
+                  </div>
+
+                  <ol>
+                    <li>Авторизоваться покупателем.</li>
+                    <li>Добавить любой товар в корзину.</li>
+                    <li>Перейти в «Корзина» → «Оформить заказ».</li>
+                    <li>Заполнить адрес и нажать «Подтвердить заказ».</li>
+                    <li>Ожидается: переход на страницу «Заказ оформлен».</li>
+                  </ol>
+                </div>
+
+                <div class="description-block">
+                  <div class="description-block__heading">
+                    <span>Логи / скриншоты</span>
+                    <img
+                      class="lock-icon"
+                      src="../assets/icons/Lock.svg"
+                      alt="Недоступно для редактирования"
+                    />
+                  </div>
+
+                  <div class="ticket-attachments">
+                    <div class="ticket-attachment">
+                      <div class="ticket-attachment__preview">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                      <span class="ticket-attachment__name">confirm_button.png</span>
+                    </div>
+
+                    <div class="ticket-attachment">
+                      <div class="ticket-attachment__preview">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                      <span class="ticket-attachment__name">devtools_500.png</span>
+                    </div>
+
+                    <div class="ticket-attachment">
+                      <div class="ticket-attachment__file">
+                        <img src="../assets/icons/txt.svg" alt="" class="file-icon" />
+                        <span>TXT</span>
+                      </div>
+                      <span class="ticket-attachment__name">console_log.txt</span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <aside class="ticket-card ticket-params">
+              <h2>Параметры</h2>
+
+              <div class="ticket-parameter">
+                <span class="ticket-parameter__heading">Статус бага</span>
+
+                <div class="custom-select status-select" id="status-select">
+                  <button
+                    class="input-field__control custom-select__trigger"
+                    type="button"
+                  >
+                    <span class="custom-select__text has-value" id="status-text">
+                      Исправлен
+                    </span>
+
+                    <img
+                      class="select-arrow"
+                      src="../assets/icons/chevron-down.svg"
+                      alt=""
+                    />
+                  </button>
+
+                  <div class="custom-select__dropdown">
+                    <div class="custom-select__option" data-value="В разработке">
+                      В разработке
+                    </div>
+
+                    <div class="custom-select__option" data-value="Исправлен">
+                      Исправлен
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ticket-parameter">
+                <div class="ticket-parameter__heading">
+                  <span>Статус проверки</span>
+                  <img class="lock-icon" src="../assets/icons/Lock.svg" alt="" />
+                </div>
+
+                <span class="chip chip--outline ticket-verification">Не исправлен</span>
+              </div>
+
+              <div class="ticket-parameter">
+                <div class="ticket-parameter__heading">
+                  <span>Ответственный</span>
+                  <img class="lock-icon" src="../assets/icons/Lock.svg" alt="" />
+                </div>
+
+                <span class="ticket-parameter__value">Иван Петров (вы)</span>
+              </div>
+
+              <div class="ticket-parameter">
+                <div class="ticket-parameter__heading">
+                  <span>Приоритет</span>
+                  <img class="lock-icon" src="../assets/icons/Lock.svg" alt="" />
+                </div>
+
+                <span class="chip chip--danger ticket-priority">Высокий</span>
+              </div>
+
+              <div class="ticket-parameter">
+                <div class="ticket-parameter__heading">
+                  <span>Дедлайн</span>
+                  <img class="lock-icon" src="../assets/icons/Lock.svg" alt="" />
+                </div>
+
+                <span class="ticket-parameter__value">28.10.2026 18:00</span>
+              </div>
+
+              <hr />
+
+              <div class="ticket-parameter">
+                <label class="input-field__label" for="release">
+                  Релиз исправления *
+                </label>
+
+                <input
+                  class="input-field__control parameter-input"
+                  id="release"
+                  value="v1.2.1"
+                />
+              </div>
+
+              <div class="ticket-parameter">
+                <label class="input-field__label" for="merge-request">
+                  Коммиты / Merge Request *
+                </label>
+
+                <div class="merge-request-chip">
+                  ↗ Commit 9f3c1d2 · team-romashka/shop
+                  <button type="button">×</button>
+                </div>
+
+                <div class="merge-request-chip">
+                  ↗ Merge Request #47 · team-romashka/shop
+                  <button type="button">×</button>
+                </div>
+
+                <div class="merge-request-input">
+                  <input
+                    class="input-field__control"
+                    id="merge-request"
+                    placeholder="Вставьте ссылку на коммит или MR"
+                  />
+                  <button type="button">+</button>
+                </div>
+              </div>
+
+              <p class="ticket-created">
+                Тикет создан 22.10.2026 14:32<br />
+                Автор: Анна Смирнова (тестировщик)
+              </p>
+            </aside>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <script src="../js/ticket_pending_review.js"></script>
+  </body>
+</html>
