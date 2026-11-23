@@ -19,6 +19,14 @@ namespace BugTracker.Controllers
         }
 
         [Authorize(Roles = "Developer")]
+        [HttpGet]
+        public async Task<ActionResult<List<ProjectResponse>>> GetDeveloperProjects()
+        {
+            var userId = int.Parse(User.FindFirst("sub")!.Value);
+            return Ok(await _service.GetDeveloperProjectsAsync(userId));
+        }
+
+        [Authorize(Roles = "Developer")]
         [HttpPost]
         public async Task<ActionResult<ProjectResponse>> Create(
             [FromHeader(Name = "Idempotency-Key"), Required] Guid? idempotencyKey,

@@ -20,6 +20,30 @@ namespace BugTracker.Services
             _db = db;
         }
 
+        public async Task<List<ProjectResponse>> GetDeveloperProjectsAsync(int userId)
+        {
+            return await _db.Projects.AsNoTracking()
+                .Where(project => project.AuthorId == userId
+                    || (project.PublishedAt != null
+                        && project.Members.Any(member => member.UserId == userId)))
+                .OrderBy(project => project.PublishedAt != null)
+                .ThenByDescending(project => project.CreatedAt)
+                .ThenByDescending(project => project.Id)
+                .Select(project => new ProjectResponse
+                {
+                    Id = project.Id,
+                    Name = project.Name,
+                    RepositoryUrl = project.RepositoryUrl,
+                    AuthorId = project.AuthorId,
+                    DeveloperIds = project.Members.Select(member => member.UserId)
+                        .OrderBy(id => id).ToList(),
+                    CreatedAt = project.CreatedAt,
+                    PublishedAt = project.PublishedAt,
+                    CheckedAt = project.CheckedAt
+                })
+                .ToListAsync();
+        }
+
         public async Task<ProjectResponse> CreateAsync(int authorId, Guid idempotencyKey, CreateProjectRequest request)
         {
             if (idempotencyKey == Guid.Empty)
@@ -53,6 +77,7 @@ namespace BugTracker.Services
                 Name = request.Name.Trim(),
                 RepositoryUrl = request.RepositoryUrl.Trim(),
                 AuthorId = authorId,
+                CreatedAt = DateTimeOffset.UtcNow,
                 CreationRequestId = idempotencyKey,
                 CreationRequestHash = requestHash,
                 Members = developerIds.Select(userId => new ProjectMember
@@ -112,6 +137,7 @@ namespace BugTracker.Services
                 RepositoryUrl = project.RepositoryUrl,
                 AuthorId = project.AuthorId,
                 DeveloperIds = project.Members.Select(member => member.UserId).OrderBy(id => id).ToList(),
+                CreatedAt = project.CreatedAt,
                 PublishedAt = project.PublishedAt,
                 CheckedAt = project.CheckedAt
             };

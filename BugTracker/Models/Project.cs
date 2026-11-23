@@ -9,6 +9,7 @@ namespace BugTracker.Models
         public string RepositoryUrl { get; set; } = string.Empty;
         public int AuthorId { get; set; }
         public User Author { get; set; } = null!;
+        public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset? PublishedAt { get; set; }
         public DateTimeOffset? CheckedAt { get; set; }
         public ICollection<ProjectMember> Members { get; set; } = new List<ProjectMember>();
