@@ -15,6 +15,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IAdminUsersService, AdminUsersService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProjectsService, ProjectsService>();
+builder.Services.AddScoped<ITicketsService, TicketsService>();
 builder.Services.AddScoped<IDbSeeder, DbSeeder>();
 builder.Services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
 
