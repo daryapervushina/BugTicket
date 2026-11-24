@@ -448,6 +448,13 @@
   line-height: normal;
 }
 
+.avatar--sm {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  font-size: var(--font-size-12);
+}
+
 .profile-info {
   display: flex;
   min-width: 0;
@@ -477,11 +484,6 @@
   font-size: var(--font-size-12);
   font-weight: 500;
   line-height: normal;
-}
-
-.profile-role {
-  color: var(--brand-primary);
-  font-size: 10px;
 }
 
 .profile-info .profile-role {
@@ -888,7 +890,6 @@
   color: var(--text-primary);
 }
 
-
 .ticket-card {
   border: 1px solid var(--border-default);
   border-radius: var(--radius-lg);
@@ -1058,7 +1059,6 @@
   line-height: 14px;
 }
 
-
 .success-banner {
   display: flex;
   align-items: flex-start;
@@ -1096,4 +1096,63 @@
 
 .ticket-parameter .chip {
   align-self: flex-start;
+}
+
+.tester-table {
+  width: 100%;
+  min-width: 1120px;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.tester-table th {
+  height: 48px;
+  padding: 0 16px;
+  background: var(--background-subtle);
+  color: var(--text-secondary);
+  font-size: var(--font-size-12);
+  font-weight: 600;
+  line-height: normal;
+  text-align: left;
+}
+
+.tester-table td {
+  height: 64px;
+  padding: 0 16px;
+  border-top: 1px solid var(--border-default);
+  color: var(--text-primary);
+  font-size: var(--font-size-14);
+  font-weight: 400;
+  line-height: normal;
+  vertical-align: middle;
+}
+
+.tester-table td.tester-table__date {
+  color: var(--text-secondary);
+}
+
+.tester-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tester-user__name {
+  display: block;
+  font-weight: 500;
+}
+
+.tester-user__note {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-secondary);
+  font-size: var(--font-size-12);
+  font-weight: 400;
+}
+
+.tester-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: -20px;
 }

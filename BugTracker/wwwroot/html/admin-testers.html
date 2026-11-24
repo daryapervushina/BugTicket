@@ -82,37 +82,160 @@
               <img src="../assets/icons/loupe.svg" alt="" />
               <input
                 type="text"
+                id="testers-search"
                 placeholder="Поиск по имени или email"
                 aria-label="Поиск по имени или email"
               />
             </div>
+
+            <select
+              class="filter-control filter-select"
+              id="testers-status-filter"
+              aria-label="Фильтр по статусу"
+            >
+              <option value="">Статус: все</option>
+              <option value="active">Активные</option>
+              <option value="blocked">Заблокированные</option>
+            </select>
           </div>
 
-          <div class="temp-actions">
-            <button
-              type="button"
-              class="button button--text"
-              data-block-tester
-              data-tester-id="1"
-            >
-              Заблокировать
-            </button>
-            <button
-              type="button"
-              class="button button--text"
-              data-block-tester
-              data-tester-id="2"
-            >
-              Заблокировать
-            </button>
-            <button
-              type="button"
-              class="button button--text"
-              data-block-tester
-              data-tester-id="3"
-            >
-              Заблокировать
-            </button>
+          <div class="data-table-wrap testers-list">
+            <table class="tester-table">
+              <colgroup>
+                <col style="width: 26%" />
+                <col style="width: 24%" />
+                <col style="width: 120px" />
+                <col style="width: 150px" />
+                <col style="width: 360px" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>ФИО</th>
+                  <th>Email</th>
+                  <th>Создан</th>
+                  <th>Статус</th>
+                  <th>Действия</th>
+                </tr>
+              </thead>
+              <tbody id="testers-tbody">
+                <tr>
+                  <td>
+                    <div class="tester-user">
+                      <div class="avatar avatar--sm">ОС</div>
+                      <div>
+                        <span class="tester-user__name">Олег Сидоров</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>o.sidorov@stud.tsu.ru</td>
+                  <td class="tester-table__date">24.10.2026</td>
+                  <td><span class="chip chip--success">Активен</span></td>
+                  <td>
+                    <div class="tester-actions">
+                      <button type="button" class="button button--text">
+                        Сбросить пароль
+                      </button>
+                      <button
+                        type="button"
+                        class="button button--text"
+                        data-block-tester
+                        data-tester-id="1"
+                      >
+                        Заблокировать
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="tester-user">
+                      <div class="avatar avatar--sm">ИП</div>
+                      <div>
+                        <span class="tester-user__name">Иван Петров</span>
+                        <span class="tester-user__note">также разработчик</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>i.petrov@stud.tsu.ru</td>
+                  <td class="tester-table__date">18.10.2026</td>
+                  <td><span class="chip chip--success">Активен</span></td>
+                  <td>
+                    <div class="tester-actions">
+                      <button type="button" class="button button--text">
+                        Сбросить пароль
+                      </button>
+                      <button
+                        type="button"
+                        class="button button--text"
+                        data-block-tester
+                        data-tester-id="2"
+                      >
+                        Заблокировать
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="tester-user">
+                      <div class="avatar avatar--sm">АС</div>
+                      <div>
+                        <span class="tester-user__name">Анна Смирнова</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>a.smirnova@stud.tsu.ru</td>
+                  <td class="tester-table__date">12.10.2026</td>
+                  <td><span class="chip chip--success">Активен</span></td>
+                  <td>
+                    <div class="tester-actions">
+                      <button type="button" class="button button--text">
+                        Сбросить пароль
+                      </button>
+                      <button
+                        type="button"
+                        class="button button--text"
+                        data-block-tester
+                        data-tester-id="3"
+                      >
+                        Заблокировать
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <div class="tester-user">
+                      <div class="avatar avatar--sm">ИК</div>
+                      <div>
+                        <span class="tester-user__name">Ирина Ким</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>i.kim@stud.tsu.ru</td>
+                  <td class="tester-table__date">05.10.2026</td>
+                  <td><span class="chip chip--neutral">Заблокирован</span></td>
+                  <td>
+                    <div class="tester-actions">
+                      <button type="button" class="button button--text">
+                        Сбросить пароль
+                      </button>
+                      <button
+                        type="button"
+                        class="button button--text"
+                        data-unblock-tester
+                        data-tester-id="4"
+                      >
+                        Разблокировать
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </main>

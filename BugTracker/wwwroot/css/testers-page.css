@@ -36,6 +36,10 @@
 }
 
 .testers-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
   margin-top: 41px;
 }
 
@@ -63,10 +67,12 @@
   color: var(--text-tertiary);
 }
 
-.temp-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: var(--space-12);
-  margin-top: var(--space-20);
+.testers-filters .filter-control.filter-select {
+  width: 220px;
+  padding-left: 14px;
+  font-size: var(--font-size-14);
+}
+
+.testers-list {
+  margin-top: 20px;
 }
