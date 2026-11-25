@@ -3,22 +3,16 @@
   const userName = document.getElementById("block-user-name");
   const confirmButton = document.getElementById("confirm-block-btn");
 
-  function findTester(id) {
-    return testers.find(function (item) {
-      return item.id === id;
-    });
-  }
-
   function openBlockModal(trigger) {
-    const id = Number(trigger.dataset.testerId);
-    const tester = findTester(id);
+    const row = trigger.closest("tr");
+    const nameElement = row ? row.querySelector(".tester-user__name") : null;
 
-    if (!tester) {
+    if (!nameElement) {
       return;
     }
 
-    userName.textContent = tester.firstName + " " + tester.lastName;
-    confirmButton.dataset.testerId = String(id);
+    userName.textContent = nameElement.textContent;
+    confirmButton.dataset.testerId = trigger.dataset.testerId;
     overlay.classList.add("is-open");
   }
 

@@ -76,3 +76,9 @@
 .testers-list {
   margin-top: 20px;
 }
+
+.tester-table__empty {
+  height: 96px;
+  color: var(--text-secondary);
+  text-align: center;
+}

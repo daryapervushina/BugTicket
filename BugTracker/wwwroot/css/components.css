@@ -1127,10 +1127,6 @@
   vertical-align: middle;
 }
 
-.tester-table td.tester-table__date {
-  color: var(--text-secondary);
-}
-
 .tester-user {
   display: flex;
   align-items: center;
@@ -1140,14 +1136,6 @@
 .tester-user__name {
   display: block;
   font-weight: 500;
-}
-
-.tester-user__note {
-  display: block;
-  margin-top: 3px;
-  color: var(--text-secondary);
-  font-size: var(--font-size-12);
-  font-weight: 400;
 }
 
 .tester-actions {
