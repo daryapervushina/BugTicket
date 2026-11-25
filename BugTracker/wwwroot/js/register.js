@@ -14,6 +14,9 @@ const REGISTER_URL = API_BASE_URL + "/api/auth/register";
 const LOGIN_URL = API_BASE_URL + "/api/auth/login";
 const TOKEN_KEY = "bugtracker_token";
 const ROLE_KEY = "bugtracker_role";
+const EMAIL_KEY = "bugtracker_email";
+const FIRST_NAME_KEY = "bugtracker_first_name";
+const LAST_NAME_KEY = "bugtracker_last_name";
 const DEVELOPER_ROLE = "Developer";
 const DEV_PROJECTS_PAGE = "dev_projects.html";
 const LOGIN_PAGE = "login.html";
@@ -100,6 +103,14 @@ async function registerUser() {
   });
 }
 
+function saveSession(data) {
+  localStorage.setItem(TOKEN_KEY, data.token);
+  localStorage.setItem(ROLE_KEY, data.role);
+  localStorage.setItem(EMAIL_KEY, data.email);
+  localStorage.setItem(FIRST_NAME_KEY, data.firstName);
+  localStorage.setItem(LAST_NAME_KEY, data.lastName);
+}
+
 async function signInAfterRegister() {
   try {
     const response = await fetch(LOGIN_URL, {
@@ -118,8 +129,7 @@ async function signInAfterRegister() {
 
     const data = await response.json();
 
-    localStorage.setItem(TOKEN_KEY, data.token);
-    localStorage.setItem(ROLE_KEY, data.role);
+    saveSession(data);
     return true;
   } catch (error) {
     return false;
