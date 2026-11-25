@@ -9,6 +9,7 @@ const API_BASE_URL = "";
 const LOGIN_URL = API_BASE_URL + "/api/auth/login";
 const TOKEN_KEY = "bugtracker_token";
 const ROLE_KEY = "bugtracker_role";
+const EMAIL_KEY = "bugtracker_email";
 const ADMIN_ROLE = "Admin";
 const ADMIN_TESTERS_PAGE = "admin-testers.html";
 
@@ -128,6 +129,7 @@ form.addEventListener("submit", async function (event) {
 
       localStorage.setItem(TOKEN_KEY, data.token);
       localStorage.setItem(ROLE_KEY, data.role);
+      localStorage.setItem(EMAIL_KEY, emailInput.value.trim());
       window.location.href = ADMIN_TESTERS_PAGE;
       return;
     }
