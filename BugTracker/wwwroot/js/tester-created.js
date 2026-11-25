@@ -27,8 +27,8 @@
   }
 
   function showCreatedModal(data) {
-    const tester = data.tester || data.user || {};
-    const password = data.temporaryPassword ?? data.password ?? null;
+    const tester = data.user || {};
+    const password = data.temporaryPassword ?? null;
     const roleAdded = Boolean(data.roleAdded);
 
     const fullName = [tester.firstName, tester.lastName]
