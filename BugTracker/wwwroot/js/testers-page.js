@@ -2,6 +2,10 @@
   const tbody = document.getElementById("testers-tbody");
   const searchInput = document.getElementById("testers-search");
   const statusSelect = document.getElementById("testers-status-filter");
+  const statusBox = document.getElementById("status-select");
+  const statusTrigger = statusBox.querySelector(".custom-select__trigger");
+  const statusText = statusBox.querySelector(".custom-select__text");
+  const statusOptions = statusBox.querySelectorAll(".custom-select__option");
   const sidebarEmail = document.querySelector(
     ".sidebar__profile .profile-info span",
   );
@@ -213,9 +217,30 @@
     });
   }
 
-  if (statusSelect) {
-    statusSelect.addEventListener("change", loadTesters);
-  }
+  statusTrigger.addEventListener("click", function () {
+    statusBox.classList.toggle("is-open");
+  });
+
+  statusOptions.forEach(function (option) {
+    option.addEventListener("click", function () {
+      statusText.textContent = this.textContent.trim();
+      statusSelect.value = this.getAttribute("data-value");
+      statusBox.classList.remove("is-open");
+      loadTesters();
+    });
+  });
+
+  document.addEventListener("click", function (event) {
+    if (!statusBox.contains(event.target)) {
+      statusBox.classList.remove("is-open");
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      statusBox.classList.remove("is-open");
+    }
+  });
 
   document.addEventListener("tester:created", loadTesters);
   document.addEventListener("tester:updated", loadTesters);

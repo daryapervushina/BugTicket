@@ -67,10 +67,8 @@
   color: var(--text-tertiary);
 }
 
-.testers-filters .filter-control.filter-select {
+.testers-filters .custom-select {
   width: 220px;
-  padding-left: 14px;
-  font-size: var(--font-size-14);
 }
 
 .testers-list {

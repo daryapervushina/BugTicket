@@ -88,15 +88,30 @@
               />
             </div>
 
-            <select
-              class="filter-control filter-select"
-              id="testers-status-filter"
-              aria-label="Фильтр по статусу"
-            >
-              <option value="">Статус: все</option>
-              <option value="active">Активные</option>
-              <option value="blocked">Заблокированные</option>
-            </select>
+            <div class="custom-select" id="status-select">
+              <button
+                type="button"
+                class="input-field__control custom-select__trigger"
+                aria-haspopup="listbox"
+                aria-label="Фильтр по статусу"
+              >
+                <span class="custom-select__text has-value">Статус: все</span>
+                <img src="../assets/icons/down.svg" alt="" />
+              </button>
+
+              <div class="custom-select__dropdown">
+                <div class="custom-select__option" data-value="">
+                  Статус: все
+                </div>
+                <div class="custom-select__option" data-value="active">
+                  Активные
+                </div>
+                <div class="custom-select__option" data-value="blocked">
+                  Заблокированные
+                </div>
+              </div>
+              <input type="hidden" id="testers-status-filter" value="" />
+            </div>
           </div>
 
           <div class="data-table-wrap testers-list">
