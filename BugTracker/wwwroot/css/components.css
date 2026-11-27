@@ -295,6 +295,10 @@
   border-radius: var(--radius-lg);
 }
 
+.banner[hidden] {
+  display: none;
+}
+
 .banner--info {
   background-color: var(--status-info-subtle);
   border-color: var(--status-info);
@@ -303,6 +307,11 @@
 .banner--warning {
   background-color: var(--status-warning-subtle);
   border-color: var(--status-warning);
+}
+
+.banner--danger {
+  background-color: var(--status-danger-subtle);
+  border-color: var(--status-danger);
 }
 
 .banner__icon {
@@ -324,12 +333,12 @@
   color: var(--text-primary);
   font-size: var(--font-size-14);
   font-weight: 600;
-  line-height: var(--line-height-19);
+  line-height: normal;
 }
 
 .banner__text {
   color: var(--text-primary);
-  font-size: var(--font-size-14);
+  font-size: var(--font-size-13);
   line-height: var(--line-height-19);
 }
 

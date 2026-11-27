@@ -24,6 +24,21 @@
         <h1 class="auth-title">Вход в систему</h1>
       </div>
       <form class="auth-form" novalidate>
+        <div class="banner banner--danger" id="role-banner" role="alert" hidden>
+          <img
+            class="banner__icon"
+            src="../assets/icons/info-error.svg"
+            alt=""
+          />
+          <div class="banner__body">
+            <p class="banner__title">У вас нет доступа с ролью «Тестировщик»</p>
+            <p class="banner__text">
+              Аккаунт тестировщика создаёт администратор. Если он вам нужен,
+              обратитесь к администратору.
+            </p>
+          </div>
+        </div>
+
         <div class="input-field" id="email-field">
           <label class="input-field__label" for="email">Email *</label>
           <input
@@ -48,7 +63,7 @@
             required
           />
         </div>
-        <div class="input-field">
+        <div class="input-field" id="role-field">
           <span class="input-field__label">Роль *</span>
           <div class="custom-select" id="role-select">
             <button
@@ -70,6 +85,9 @@
             </div>
             <input type="hidden" name="role" id="role-input" />
           </div>
+          <p class="input-field__error" id="role-error" hidden>
+            Нет доступа с этой ролью
+          </p>
         </div>
 
         <button
