@@ -3,6 +3,9 @@ const trigger = customSelect.querySelector(".custom-select__trigger");
 const options = customSelect.querySelectorAll(".custom-select__option");
 const textSpan = customSelect.querySelector(".custom-select__text");
 const hiddenInput = document.getElementById("role-input");
+const roleField = document.getElementById("role-field");
+const roleError = document.getElementById("role-error");
+const roleBanner = document.getElementById("role-banner");
 const form = document.querySelector(".auth-form");
 const emailInput = document.getElementById("email");
 const emailField = document.getElementById("email-field");
@@ -15,6 +18,7 @@ const LOGIN_URL = API_BASE_URL + "/api/auth/login";
 const TOKEN_KEY = "bugtracker_token";
 const ROLE_KEY = "bugtracker_role";
 const DEVELOPER_ROLE = "Developer";
+const TESTER_ROLE = "Tester";
 const DEV_PROJECTS_PAGE = "dev_projects.html";
 
 const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -39,7 +43,7 @@ function updateSubmitState() {
   const isFilled =
     isEmailValid() && passwordInput.value !== "" && hiddenInput.value !== "";
 
-  submitButton.disabled = isSubmitting || !isFilled;
+  submitButton.disabled = isSubmitting || !isFilled || !roleError.hidden;
 }
 
 function updateEmailError() {
@@ -54,8 +58,17 @@ function showFormError(text) {
   formError.hidden = false;
 }
 
+function showRoleAccessDenied() {
+  roleBanner.hidden = false;
+  roleField.classList.add("input-field--error");
+  roleError.hidden = false;
+}
+
 function hideFormError() {
   formError.hidden = true;
+  roleBanner.hidden = true;
+  roleField.classList.remove("input-field--error");
+  roleError.hidden = true;
 }
 
 async function readProblemDetail(response) {
@@ -77,7 +90,13 @@ async function showResponseError(response) {
     const detail = await readProblemDetail(response);
     const isBlocked = detail.toLowerCase().includes("blocked");
 
-    showFormError(isBlocked ? BLOCKED_TEXT : ROLE_FORBIDDEN_TEXT);
+    if (isBlocked) {
+      showFormError(BLOCKED_TEXT);
+    } else if (hiddenInput.value === TESTER_ROLE) {
+      showRoleAccessDenied();
+    } else {
+      showFormError(ROLE_FORBIDDEN_TEXT);
+    }
     return;
   }
 
