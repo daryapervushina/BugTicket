@@ -17,9 +17,12 @@ const API_BASE_URL = "";
 const LOGIN_URL = API_BASE_URL + "/api/auth/login";
 const TOKEN_KEY = "bugtracker_token";
 const ROLE_KEY = "bugtracker_role";
+const MUST_CHANGE_KEY = "bugtracker_must_change_password";
 const DEVELOPER_ROLE = "Developer";
 const TESTER_ROLE = "Tester";
 const DEV_PROJECTS_PAGE = "dev_projects.html";
+const TESTER_HOME_PAGE = "tester_projects.html";
+const CHANGE_PASSWORD_PAGE = "change_password.html";
 
 const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const INVALID_CREDENTIALS_TEXT = "Неверный email или пароль";
@@ -182,8 +185,21 @@ form.addEventListener("submit", async function (event) {
       localStorage.setItem(TOKEN_KEY, data.token);
       localStorage.setItem(ROLE_KEY, data.role);
 
+      if (data.mustChangePassword && data.role === TESTER_ROLE) {
+        localStorage.setItem(MUST_CHANGE_KEY, "true");
+        window.location.href = CHANGE_PASSWORD_PAGE;
+        return;
+      }
+
+      localStorage.removeItem(MUST_CHANGE_KEY);
+
       if (data.role === DEVELOPER_ROLE) {
         window.location.href = DEV_PROJECTS_PAGE;
+        return;
+      }
+
+      if (data.role === TESTER_ROLE) {
+        window.location.href = TESTER_HOME_PAGE;
         return;
       }
     } else {
