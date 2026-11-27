@@ -1,82 +1,620 @@
-const currentUser = "Иван Петров";
+const API_BASE_URL = "";
 
-const developers = [
-  "Иван Петров",
-  "Мария Козлова",
-  "Дмитрий Орлов",
-  "Марина Ахметова",
-  "Марина Лебедева",
-  "Алексей Сидоров",
-];
+const TOKEN_KEY = "bugtracker_token";
+const ROLE_KEY = "bugtracker_role";
 
-const selectedDevelopers = new Set([
-  "Иван Петров",
-  "Мария Козлова",
-  "Дмитрий Орлов",
-]);
+const projectForm = document.getElementById("project-form");
 
-const tickets = [
-  {
-    number: 12,
-    title: "Не работает кнопка «Подтвердить заказ»",
-    status: "Исправлен",
-    verification: "Не исправлен",
-    priority: "Высокий",
-    developer: "Иван Петров",
-    deadline: "28.10.2026 18:00",
-    overdue: false,
-    closed: false,
-  },
-  {
-    number: 11,
-    title: "Падает поиск при вводе спецсимволов",
-    status: "Исправлен",
-    verification: "Исправлен",
-    priority: "Высокий",
-    developer: "Мария Козлова",
-    deadline: "20.10.2026 12:00",
-    overdue: false,
-    closed: true,
-  },
-  {
-    number: 13,
-    title: "Корзина не очищается после оплаты",
-    status: "В разработке",
-    verification: "Не исправлен",
-    priority: "Средний",
-    developer: "Иван Петров",
-    deadline: "24.10.2026 18:00",
-    overdue: true,
-    closed: false,
-  },
-  {
-    number: 10,
-    title: "Неверно считается сумма скидки",
-    status: "Исправлен",
-    verification: "Исправлен",
-    priority: "Средний",
-    developer: "Мария Козлова",
-    deadline: "18.10.2026 12:00",
-    overdue: false,
-    closed: true,
-  },
-  {
-    number: 14,
-    title: "Опечатка на странице «О нас»",
-    status: "Не исправлен",
-    verification: "Не исправлен",
-    priority: "Низкий",
-    developer: "",
-    deadline: "—",
-    overdue: false,
-    closed: false,
-  },
-];
+const projectNameInput = document.getElementById("project-name");
+const repositoryInput = document.getElementById("repository");
+const repositoryLink = document.getElementById("repository-link");
 
-const developerSearch = document.getElementById("developer-search");
-const developerOptions = document.getElementById("developer-options");
+const projectTitle = document.getElementById("project-title");
+const breadcrumbProjectName = document.getElementById(
+  "breadcrumb-project-name",
+);
+
+const projectDate = document.getElementById("project-date");
+const projectStatus = document.getElementById("project-status");
+const projectMessage = document.getElementById("project-message");
+
+const saveButton = document.getElementById("save-project");
+const publishButton = document.getElementById("publish-project");
+
+const profileName = document.getElementById("profile-name");
+const profileRole = document.getElementById("profile-role");
+const changeRoleLink = document.getElementById("change-role");
+const logoutButton = document.getElementById("logout-button");
+
 const developerList = document.getElementById("developer-list");
 const ticketsBody = document.getElementById("tickets-body");
+
+const ticketSearch = document.getElementById("ticket-search");
+const statusFilter = document.getElementById("status-filter");
+const priorityFilter = document.getElementById("priority-filter");
+const onlyMine = document.getElementById("only-mine");
+const hideClosed = document.getElementById("hide-closed");
+
+const bugStatusLabels = {
+  NotFixed: "Не исправлен",
+  InProgress: "В разработке",
+  Fixed: "Исправлен",
+};
+
+const reviewStatusLabels = {
+  NotFixed: "Не исправлен",
+  Fixed: "Исправлен",
+};
+
+const priorityLabels = {
+  High: "Высокий",
+  Medium: "Средний",
+  Low: "Низкий",
+};
+
+let token = localStorage.getItem(TOKEN_KEY);
+let currentUserId = null;
+let currentRole = null;
+
+let project = null;
+let tickets = [];
+let isBusy = false;
+
+const projectId = getProjectId();
+
+
+function getProjectId() {
+  const value = new URLSearchParams(window.location.search).get("id");
+
+  if (!value || !/^\d+$/.test(value)) {
+    return null;
+  }
+
+  const id = Number(value);
+
+  return Number.isSafeInteger(id) && id > 0 ? id : null;
+}
+
+function readJwtPayload(jwt) {
+  try {
+    const parts = jwt.split(".");
+
+    if (parts.length !== 3) {
+      return null;
+    }
+
+    const base64 = parts[1]
+      .replace(/-/g, "+")
+      .replace(/_/g, "/");
+
+    const paddedBase64 = base64.padEnd(
+      Math.ceil(base64.length / 4) * 4,
+      "=",
+    );
+
+    const bytes = Uint8Array.from(
+      atob(paddedBase64),
+      (character) => character.charCodeAt(0),
+    );
+
+    return JSON.parse(new TextDecoder().decode(bytes));
+  } catch {
+    return null;
+  }
+}
+
+function initializeIdentity() {
+  if (!token) {
+    return false;
+  }
+
+  const payload = readJwtPayload(token);
+
+  if (!payload) {
+    return false;
+  }
+
+  const userId = Number(payload.sub);
+  const role = payload.role;
+
+  if (
+    !Number.isSafeInteger(userId) ||
+    userId <= 0 ||
+    !["Developer", "Tester"].includes(role)
+  ) {
+    return false;
+  }
+
+  currentUserId = userId;
+  currentRole = role;
+
+  return true;
+}
+
+function renderProfile() {
+  profileName.textContent = `Пользователь #${currentUserId}`;
+
+  profileRole.textContent =
+    currentRole === "Developer"
+      ? "Роль: Разработчик"
+      : "Роль: Тестировщик";
+}
+
+function clearSession() {
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(ROLE_KEY);
+
+  token = null;
+  currentUserId = null;
+  currentRole = null;
+}
+
+function redirectToLogin() {
+  clearSession();
+  window.location.href = "login.html";
+}
+
+function showMessage(message) {
+  projectMessage.textContent = message;
+}
+
+function clearMessage() {
+  projectMessage.textContent = "";
+}
+
+async function readError(response) {
+  if (response.status === 401) {
+    return "Сессия недействительна или истекла. Войдите повторно.";
+  }
+
+  try {
+    const data = await response.json();
+
+    if (data.errors && typeof data.errors === "object") {
+      const messages = Object.values(data.errors).flat();
+
+      const firstMessage = messages.find(
+        (message) => typeof message === "string",
+      );
+
+      if (firstMessage) {
+        return firstMessage;
+      }
+    }
+
+    if (typeof data.detail === "string" && data.detail) {
+      return data.detail;
+    }
+
+    if (typeof data.title === "string" && data.title) {
+      return data.title;
+    }
+  } catch {
+  }
+
+  if (response.status === 403) {
+    return "У вас нет доступа к этому действию.";
+  }
+
+  if (response.status === 404) {
+    return "Запрошенные данные не найдены.";
+  }
+
+  if (response.status === 409) {
+    return "Данные изменились. Обновите страницу и повторите действие.";
+  }
+
+  return "Не удалось выполнить запрос. Попробуйте ещё раз.";
+}
+
+async function apiRequest(path, options = {}) {
+  const headers = new Headers(options.headers || {});
+
+  headers.set("Authorization", `Bearer ${token}`);
+
+  if (options.body) {
+    headers.set("Content-Type", "application/json");
+  }
+
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    ...options,
+    headers,
+  });
+
+  if (!response.ok) {
+    const error = new Error(await readError(response));
+    error.status = response.status;
+    throw error;
+  }
+
+  return response.json();
+}
+
+function handleRequestError(error) {
+  if (error.status === 401) {
+    showMessage(
+      "Сессия недействительна или истекла. Войдите повторно.",
+    );
+
+
+    clearSession();
+    updateControls();
+    changeRoleLink.hidden = true;
+    return;
+  }
+
+  showMessage(
+    error.message || "Не удалось выполнить запрос.",
+  );
+}
+
+logoutButton.addEventListener("click", redirectToLogin);
+
+changeRoleLink.addEventListener("click", async (event) => {
+  event.preventDefault();
+
+  if (isBusy || !token || !currentRole) {
+    return;
+  }
+
+  const targetRole =
+    currentRole === "Developer"
+      ? "Tester"
+      : "Developer";
+
+  isBusy = true;
+  updateControls();
+  showMessage("Смена роли…");
+
+  try {
+    const response = await apiRequest("/api/auth/switch-role", {
+      method: "POST",
+      body: JSON.stringify({
+        role: targetRole,
+      }),
+    });
+
+    if (!response.token || !response.role) {
+      throw new Error("Сервер вернул некорректный ответ.");
+    }
+
+    // После смены роли необходимо использовать новый токен.
+    localStorage.setItem(TOKEN_KEY, response.token);
+    localStorage.setItem(ROLE_KEY, response.role);
+
+    token = response.token;
+
+    if (!initializeIdentity()) {
+      clearSession();
+      throw new Error(
+        "Не удалось прочитать новую сессию. Войдите повторно.",
+      );
+    }
+
+    renderProfile();
+
+    const refreshedProject = await apiRequest(
+      `/api/projects/${projectId}`,
+    );
+
+    project = refreshedProject;
+    tickets = Array.isArray(refreshedProject.tickets)
+      ? refreshedProject.tickets
+      : [];
+
+    renderProject();
+    showMessage("Роль изменена.");
+  } catch (error) {
+    if (error.status === 403 && token) {
+
+      const payload = readJwtPayload(token);
+
+      if (payload && payload.role === targetRole) {
+        project = null;
+        tickets = [];
+
+        projectTitle.textContent = "Проект недоступен";
+        breadcrumbProjectName.textContent = "Проект";
+        projectDate.textContent = "";
+        projectStatus.textContent = "";
+
+        projectNameInput.value = "";
+        repositoryInput.value = "";
+        repositoryLink.hidden = true;
+
+        developerList.replaceChildren();
+        ticketsBody.replaceChildren();
+
+        showMessage(
+          "Роль изменена, но у новой роли нет доступа к этому проекту.",
+        );
+        return;
+      }
+    }
+
+    handleRequestError(error);
+  } finally {
+    isBusy = false;
+    updateControls();
+  }
+});
+
+
+function formatDate(value, includeTime = false) {
+  if (!value) {
+    return "—";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "—";
+  }
+
+  const options = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  };
+
+  if (includeTime) {
+    options.hour = "2-digit";
+    options.minute = "2-digit";
+  }
+
+  return new Intl.DateTimeFormat("ru-RU", options).format(date);
+}
+
+function canEditProject() {
+  if (!token || !project || currentRole !== "Developer") {
+    return false;
+  }
+
+  if (project.authorId === currentUserId) {
+    return true;
+  }
+
+  return (
+    Boolean(project.publishedAt) &&
+    Array.isArray(project.developerIds) &&
+    project.developerIds.includes(currentUserId)
+  );
+}
+
+function canPublishProject() {
+  return Boolean(
+    token &&
+      project &&
+      currentRole === "Developer" &&
+      project.authorId === currentUserId &&
+      !project.publishedAt,
+  );
+}
+
+function updateControls() {
+  const canEdit = canEditProject();
+
+  projectNameInput.disabled = isBusy || !canEdit;
+  saveButton.disabled = isBusy || !canEdit;
+  publishButton.disabled = isBusy || !canPublishProject();
+
+  if (project && project.publishedAt) {
+    publishButton.textContent = "✓ Опубликован";
+  } else {
+    publishButton.textContent = "Опубликовать";
+  }
+}
+
+function renderProject() {
+  document.title = `${project.name} — BugTracker`;
+
+  projectTitle.textContent = project.name;
+  breadcrumbProjectName.textContent = project.name;
+
+  projectNameInput.value = project.name;
+  repositoryInput.value = project.repositoryUrl;
+
+  try {
+    const url = new URL(project.repositoryUrl);
+
+    if (url.protocol === "http:" || url.protocol === "https:") {
+      repositoryLink.href = url.href;
+      repositoryLink.hidden = false;
+    } else {
+      repositoryLink.removeAttribute("href");
+      repositoryLink.hidden = true;
+    }
+  } catch {
+    repositoryLink.removeAttribute("href");
+    repositoryLink.hidden = true;
+  }
+
+  if (project.publishedAt) {
+    projectDate.textContent =
+      `Опубликован ${formatDate(project.publishedAt)}`;
+
+    projectStatus.textContent = "Опубликован";
+    projectStatus.className = "chip chip--info";
+  } else {
+    projectDate.textContent =
+      `Создан ${formatDate(project.createdAt)}`;
+
+    projectStatus.textContent = "Черновик";
+    projectStatus.className = "chip chip--neutral";
+  }
+
+  renderDevelopers();
+  renderTickets();
+  updateControls();
+}
+
+function renderDevelopers() {
+  developerList.replaceChildren();
+
+  const developerIds = Array.isArray(project.developerIds)
+    ? project.developerIds
+    : [];
+
+  if (developerIds.length === 0) {
+    developerList.textContent = "Нет участников";
+    return;
+  }
+
+  developerIds.forEach((id) => {
+    const chip = document.createElement("span");
+    chip.className = "developer-chip";
+
+    chip.textContent =
+      id === project.authorId
+        ? `Разработчик #${id} · автор`
+        : `Разработчик #${id}`;
+
+    developerList.append(chip);
+  });
+}
+
+async function loadProject() {
+  isBusy = true;
+  updateControls();
+  showMessage("Загрузка проекта…");
+
+  try {
+    const data = await apiRequest(`/api/projects/${projectId}`);
+
+    project = data;
+
+    tickets = Array.isArray(data.tickets)
+      ? data.tickets
+      : [];
+
+    renderProject();
+    clearMessage();
+  } catch (error) {
+    projectTitle.textContent = "Не удалось загрузить проект";
+    breadcrumbProjectName.textContent = "Проект";
+
+    handleRequestError(error);
+  } finally {
+    isBusy = false;
+    updateControls();
+  }
+}
+
+projectForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (isBusy || !canEditProject()) {
+    return;
+  }
+
+  const name = projectNameInput.value.trim();
+
+  if (!name) {
+    showMessage("Введите название проекта.");
+    projectNameInput.focus();
+    return;
+  }
+
+  if (name.length > 100) {
+    showMessage(
+      "Название проекта не должно превышать 100 символов.",
+    );
+
+    projectNameInput.focus();
+    return;
+  }
+
+  isBusy = true;
+  updateControls();
+  showMessage("Сохранение…");
+
+  try {
+    const updatedProject = await apiRequest(
+      `/api/projects/${projectId}`,
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          name,
+        }),
+      },
+    );
+
+    project = {
+      ...project,
+      ...updatedProject,
+    };
+
+    renderProject();
+    showMessage("Проект сохранён.");
+  } catch (error) {
+    handleRequestError(error);
+  } finally {
+    isBusy = false;
+    updateControls();
+  }
+});
+
+publishButton.addEventListener("click", async () => {
+  if (isBusy || !canPublishProject()) {
+    return;
+  }
+
+  if (projectNameInput.value.trim() !== project.name) {
+    showMessage(
+      "Сначала сохраните изменённое название проекта.",
+    );
+    return;
+  }
+
+  isBusy = true;
+  updateControls();
+  showMessage("Публикация…");
+
+  try {
+    const publishedProject = await apiRequest(
+      `/api/projects/${projectId}/publish`,
+      {
+        method: "POST",
+      },
+    );
+
+    project = {
+      ...project,
+      ...publishedProject,
+    };
+
+    renderProject();
+
+    try {
+      const refreshedProject = await apiRequest(
+        `/api/projects/${projectId}`,
+      );
+
+      project = refreshedProject;
+
+      tickets = Array.isArray(refreshedProject.tickets)
+        ? refreshedProject.tickets
+        : [];
+
+      renderProject();
+      showMessage("Проект опубликован.");
+    } catch (error) {
+      if (error.status === 401) {
+        handleRequestError(error);
+      } else {
+        showMessage(
+          "Проект опубликован, но обновить тикеты не удалось. Обновите страницу.",
+        );
+      }
+    }
+  } catch (error) {
+    handleRequestError(error);
+  } finally {
+    isBusy = false;
+    updateControls();
+  }
+});
+
 
 function chipClass(value) {
   const classes = {
@@ -97,89 +635,70 @@ function verificationChipClass(value) {
     : "chip--outline";
 }
 
-function renderDevelopers() {
-  developerList.innerHTML = "";
+function createChip(text, className) {
+  const chip = document.createElement("span");
 
-  selectedDevelopers.forEach((developer) => {
-    const chip = document.createElement("span");
-    chip.className = "developer-chip";
-    chip.append(document.createTextNode(developer));
+  chip.className = `chip ${className}`;
+  chip.textContent = text;
 
-    const removeButton = document.createElement("button");
-    removeButton.className = "developer-chip__remove";
-    removeButton.type = "button";
-    removeButton.textContent = "×";
-    removeButton.setAttribute(
-      "aria-label",
-      `Удалить разработчика ${developer}`,
-    );
-
-    removeButton.addEventListener("click", () => {
-      selectedDevelopers.delete(developer);
-      renderDevelopers();
-      renderDeveloperOptions(developerSearch.value);
-    });
-
-    chip.append(removeButton);
-    developerList.append(chip);
-  });
+  return chip;
 }
 
-function renderDeveloperOptions(search = "") {
-  developerOptions.innerHTML = "";
+function addTextCell(row, text, className = "") {
+  const cell = document.createElement("td");
 
-  const searchText = search.toLowerCase().trim();
+  cell.textContent = text;
 
-  developers
-    .filter((developer) => developer.toLowerCase().includes(searchText))
-    .forEach((developer) => {
-      const option = document.createElement("label");
-      option.className = "developer-option";
+  if (className) {
+    cell.className = className;
+  }
 
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.checked = selectedDevelopers.has(developer);
+  row.append(cell);
+}
 
-      checkbox.addEventListener("change", () => {
-        if (checkbox.checked) {
-          selectedDevelopers.add(developer);
-        } else {
-          selectedDevelopers.delete(developer);
-        }
+function addChipCell(row, text, className) {
+  const cell = document.createElement("td");
 
-        renderDevelopers();
-      });
-
-      option.append(checkbox, `${developer} · разработчик`);
-      developerOptions.append(option);
-    });
+  cell.append(createChip(text, className));
+  row.append(cell);
 }
 
 function renderTickets() {
-  const search = document
-    .getElementById("ticket-search")
-    .value
-    .trim()
-    .toLowerCase();
-
-  const selectedStatus = document.getElementById("status-filter").value;
-  const selectedPriority = document.getElementById("priority-filter").value;
-  const onlyMine = document.getElementById("only-mine").checked;
-  const hideClosed = document.getElementById("hide-closed").checked;
+  const search = ticketSearch.value.trim().toLowerCase();
+  const selectedStatus = statusFilter.value;
+  const selectedPriority = priorityFilter.value;
 
   const filteredTickets = tickets.filter((ticket) => {
+    const bugStatus =
+      bugStatusLabels[ticket.bugStatus] ||
+      ticket.bugStatus ||
+      "—";
+
+    const priority =
+      priorityLabels[ticket.priority] || "—";
+
+    const title = ticket.title || "";
+
     const matchesSearch =
-      ticket.title.toLowerCase().includes(search) ||
-      String(ticket.number).includes(search);
+      title.toLowerCase().includes(search) ||
+      String(ticket.id).includes(search);
 
     const matchesStatus =
-      selectedStatus === "all" || ticket.status === selectedStatus;
+      selectedStatus === "all" ||
+      bugStatus === selectedStatus;
 
     const matchesPriority =
-      selectedPriority === "all" || ticket.priority === selectedPriority;
+      selectedPriority === "all" ||
+      priority === selectedPriority;
 
-    const matchesMine = !onlyMine || ticket.developer === currentUser;
-    const matchesClosed = !hideClosed || !ticket.closed;
+    const matchesMine =
+      !onlyMine.checked ||
+      ticket.assignee?.id === currentUserId;
+
+
+    const matchesClosed =
+      !hideClosed.checked ||
+      ticket.reviewStatus !== "Fixed";
 
     return (
       matchesSearch &&
@@ -190,88 +709,139 @@ function renderTickets() {
     );
   });
 
-  ticketsBody.innerHTML = "";
+  ticketsBody.replaceChildren();
+
+  if (filteredTickets.length === 0) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
+
+    cell.colSpan = 7;
+
+    if (!project?.publishedAt) {
+      cell.textContent =
+        "Тикеты доступны после публикации проекта.";
+    } else if (tickets.length === 0) {
+      cell.textContent = "В проекте пока нет тикетов.";
+    } else {
+      cell.textContent =
+        "По заданным фильтрам тикеты не найдены.";
+    }
+
+    row.append(cell);
+    ticketsBody.append(row);
+    return;
+  }
 
   filteredTickets.forEach((ticket) => {
     const row = document.createElement("tr");
 
-    row.innerHTML = `
-      <td class="data-table__number">#${ticket.number}</td>
+    const bugStatus =
+      bugStatusLabels[ticket.bugStatus] ||
+      ticket.bugStatus ||
+      "—";
 
-      <td>
-        <a
-          class="data-table__link"
-          href="${
-            ticket.number === 13
-            ? "ticket_in_progress.html"
-            : ticket.number === 12
-              ? "ticket_pending_review.html"
-              : "ticket_view.html"
-            }"
-        >
-          ${ticket.title}
-        </a>
-      </td>
+    const reviewStatus =
+      reviewStatusLabels[ticket.reviewStatus] ||
+      ticket.reviewStatus ||
+      "—";
 
-      <td>
-        <span class="chip ${chipClass(ticket.status)}">
-          ${ticket.status}
-        </span>
-      </td>
+    const priority =
+      priorityLabels[ticket.priority] || "—";
 
-      <td>
-        <span class="chip ${verificationChipClass(ticket.verification)}">
-          ${ticket.verification}
-        </span>
-      </td>
+    const assignee = ticket.assignee
+      ? [
+          ticket.assignee.firstName,
+          ticket.assignee.lastName,
+        ]
+          .filter(Boolean)
+          .join(" ")
+      : "";
 
-      <td>
-        <span class="chip ${chipClass(ticket.priority)}">
-          ${ticket.priority}
-        </span>
-      </td>
+    const deadline = formatDate(ticket.deadline, true);
 
-      <td class="${ticket.developer ? "" : "data-table__muted"}">
-        ${ticket.developer || "Не назначен"}
-      </td>
+    const deadlineTime = ticket.deadline
+      ? new Date(ticket.deadline).getTime()
+      : NaN;
 
-      <td class="${ticket.overdue ? "data-table__overdue" : ""}">
-        ${ticket.deadline}
-      </td>
-    `;
+    const isOverdue =
+      Number.isFinite(deadlineTime) &&
+      deadlineTime < Date.now() &&
+      ticket.reviewStatus !== "Fixed";
+
+    addTextCell(
+      row,
+      `#${ticket.id}`,
+      "data-table__number",
+    );
+
+
+    addTextCell(
+      row,
+      ticket.title || "Без названия",
+    );
+
+    addChipCell(
+      row,
+      bugStatus,
+      chipClass(bugStatus),
+    );
+
+    addChipCell(
+      row,
+      reviewStatus,
+      verificationChipClass(reviewStatus),
+    );
+
+    addChipCell(
+      row,
+      priority,
+      chipClass(priority),
+    );
+
+    addTextCell(
+      row,
+      assignee || "Не назначен",
+      assignee ? "" : "data-table__muted",
+    );
+
+    addTextCell(
+      row,
+      deadline,
+      isOverdue ? "data-table__overdue" : "",
+    );
 
     ticketsBody.append(row);
   });
 }
 
-developerSearch.addEventListener("focus", () => {
-  renderDeveloperOptions(developerSearch.value);
-});
+ticketSearch.addEventListener("input", renderTickets);
+statusFilter.addEventListener("change", renderTickets);
+priorityFilter.addEventListener("change", renderTickets);
+onlyMine.addEventListener("change", renderTickets);
+hideClosed.addEventListener("change", renderTickets);
 
-developerSearch.addEventListener("input", () => {
-  renderDeveloperOptions(developerSearch.value);
-});
 
-document.addEventListener("click", (event) => {
-  if (!event.target.closest(".developer-picker")) {
-    developerOptions.innerHTML = "";
+if (!token) {
+  window.location.href = "login.html";
+} else if (!initializeIdentity()) {
+  clearSession();
+
+  projectTitle.textContent =
+    "Не удалось определить пользователя";
+
+  showMessage("Войдите в аккаунт повторно.");
+
+  changeRoleLink.hidden = true;
+} else {
+  renderProfile();
+
+  if (!projectId) {
+    projectTitle.textContent = "Проект не выбран";
+
+    showMessage(
+      "В адресе страницы нет корректного ID проекта. Откройте проект из списка.",
+    );
+  } else {
+    loadProject();
   }
-});
-
-document.getElementById("ticket-search").addEventListener("input", renderTickets);
-document.getElementById("status-filter").addEventListener("change", renderTickets);
-document.getElementById("priority-filter").addEventListener("change", renderTickets);
-document.getElementById("only-mine").addEventListener("change", renderTickets);
-document.getElementById("hide-closed").addEventListener("change", renderTickets);
-
-document.getElementById("project-form").addEventListener("submit", (event) => {
-  event.preventDefault();
-
-  const repository = document.getElementById("repository");
-  const repositoryLink = document.getElementById("repository-link");
-
-  repositoryLink.href = repository.value;
-});
-
-renderDevelopers();
-renderTickets();
+}

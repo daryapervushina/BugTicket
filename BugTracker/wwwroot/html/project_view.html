@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Интернет-магазин «Ромашка» — BugTracker</title>
+    <title>Проект — BugTracker</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,21 +36,20 @@
         </nav>
 
         <div class="sidebar__profile">
-          <div class="avatar">ИП</div>
+          <div class="avatar" id="profile-avatar">?</div>
 
           <div class="profile-info">
-            <strong>Иван Петров</strong>
-            <span>i.petrov@stud.tsu.ru</span>
-            <span class="profile-role">Роль: Разработчик</span>
+            <strong id="profile-name">Пользователь</strong>
+            <span class="profile-role" id="profile-role">>Роль: Разработчик</span>
           </div>
 
           <div class="profile-actions">
-            <button class="logout-button" type="button">
+            <button class="logout-button" id="logout-button" type="button">
               <img src="../assets/icons/log-out.svg" alt="" />
               Выйти
             </button>
 
-            <a class="change-role" href="#">Сменить роль</a>
+            <a class="change-role" id="change-role" href="#">Сменить роль</a>
           </div>
         </div>
       </aside>
@@ -60,22 +59,21 @@
           <div class="breadcrumbs">
             <a href="dev_projects.html">Мои проекты</a>
             <span>/</span>
-            <strong>Интернет-магазин «Ромашка»</strong>
+            <strong id="breadcrumb-project-name">Загрузка проекта…</strong>
           </div>
 
           <button class="notification-button" type="button" aria-label="Уведомления">
             <img src="../assets/icons/bell.svg" alt="" />
-            <span class="notification-count">2</span>
           </button>
         </header>
 
         <main class="project-view-page">
           <div class="project-title">
-            <h1>Интернет-магазин «Ромашка»</h1>
+            <h1 id="project-title">Загрузка проекта…</h1>
 
             <div class="project-title__meta">
-              <span>Опубликован 20.10.2026</span>
-              <span class="chip chip--info">Опубликован</span>
+              <span id="project-date"></span>
+              <span class="chip chip--neutral" id="project-status"></span>
             </div>
           </div>
 
@@ -89,7 +87,7 @@
                 <input
                   class="input-field__control"
                   id="project-name"
-                  value="Интернет-магазин «Ромашка»"
+                  maxlength="100"
                   required
                 />
               </div>
@@ -104,16 +102,14 @@
                     class="input-field__control"
                     id="repository"
                     type="url"
-                    value="https://github.com/team-romashka/shop"
-                    required
+                    readonly
                   />
 
                   <a
                     class="repository-field__link"
                     id="repository-link"
-                    href="https://github.com/team-romashka/shop"
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
                     aria-label="Открыть репозиторий"
                 >
                     <img src="../assets/icons/arrow.svg" alt="" />
@@ -122,14 +118,22 @@
               </div>
 
               <div class="project-actions">
-                <button class="button button--primary" type="submit">
+                <button 
+                class="button button--primary" 
+                id="save-project"
+                type="submit"
+                >
                   Сохранить проект
                 </button>
 
-                <button class="button button--primary" type="button" disabled>
-                    ✓ Опубликован
+                <button class="button button--primary" 
+                type="button" 
+                id="publish-project"
+                disabled>
+                    Опубликовать
                 </button>
               </div>
+              <p id="project-message" role="status" aria-live="polite"></p>
             </form>
 
             <section class="project-developers">
@@ -143,9 +147,9 @@
 
                       <input
                         id="developer-search"
-                       type="text"
-                      placeholder="Найти по имени или фамилии"
-                       autocomplete="off"
+                        type="text"
+                        placeholder="Найти по имени или фамилии"
+                        autocomplete="off"
                      />
                  </div>
 
@@ -154,7 +158,7 @@
 
                  <p class="project-developers__label">Разработчики проекта</p>
                  <div class="developer-list" id="developer-list"></div>
-                </section>
+              </section>
           </section>
 
           <section class="tickets-section">

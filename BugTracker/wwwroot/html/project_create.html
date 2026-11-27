@@ -36,21 +36,20 @@
         </nav>
 
         <div class="sidebar__profile">
-          <div class="avatar">ИП</div>
+          <div class="avatar">?</div>
 
           <div class="profile-info">
-            <strong>Иван Петров</strong>
-            <span>i.petrov@stud.tsu.ru</span>
+            <strong id="profile-name">Пользователь</strong>
             <span class="profile-role">Роль: Разработчик</span>
           </div>
 
           <div class="profile-actions">
-            <button class="logout-button" type="button">
+            <button class="logout-button" id="logout-button" type="button">
               <img src="../assets/icons/log-out.svg" alt="" />
               Выйти
             </button>
 
-            <a class="change-role" href="#">Сменить роль</a>
+            <a class="change-role" href="dev_projects.html">Сменить роль</a>
           </div>
         </div>
       </aside>
@@ -65,7 +64,6 @@
 
           <button class="notification-button" type="button" aria-label="Уведомления">
             <img src="../assets/icons/bell.svg" alt="" />
-            <span class="notification-count">2</span>
           </button>
         </header>
 
@@ -87,6 +85,7 @@
                     id="project-name"
                     type="text"
                     placeholder="Введите название проекта"
+                    maxlength="100"
                     required
                   />
                 </div>
@@ -113,7 +112,7 @@
 
                 <div class="input-field" id="developers-field">
                   <label class="input-field__label" for="developer-search">
-                    Добавить разработчиков *
+                    Добавить разработчиков
                   </label>
 
                   <div class="developer-picker">
@@ -156,6 +155,8 @@
                     Опубликовать проект
                   </button>
                 </div>
+
+                <p id="project-message" role="status" aria-live="polite"></p>
               </form>
             </section>
 

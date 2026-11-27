@@ -15,13 +15,13 @@
     <link rel="stylesheet" href="../css/variables.css" />
     <link rel="stylesheet" href="../css/base.css" />
     <link rel="stylesheet" href="../css/components.css" />
-    <link rel="stylesheet" href="../css/dev_projects.css" />
+    <link rel="stylesheet" href="../css/dev_projects.css?v=2" />
   </head>
 
   <body>
     <div class="app-layout">
       <aside class="sidebar">
-        <a class="brand" href="#">
+        <a class="brand" href="dev_projects.html">
           <span class="brand__logo">B</span>
           <span>BugTracker</span>
         </a>
@@ -29,53 +29,53 @@
         <nav class="sidebar__nav">
           <p class="sidebar__caption">Меню</p>
 
-          <a class="nav-item nav-item--active" href="#">
+          <a class="nav-item nav-item--active" href="dev_projects.html">
             <img src="../assets/icons/folder.svg" alt="" />
-            <span>Мои проекты</span>
+            <span id="nav-projects-label">Мои проекты</span>
           </a>
         </nav>
 
         <div class="sidebar__profile">
-          <div class="avatar">ИП</div>
+          <div class="avatar">?</div>
 
           <div class="profile-info">
-            <strong>Иван Петров</strong>
-            <span>i.petrov@stud.tsu.ru</span>
-            <span class="profile-role">Роль: Разработчик</span>
+            <strong id="profile-name">Пользователь</strong>
+            <span class="profile-role" id="profile-role"></span>
           </div>
 
           <div class="profile-actions">
-            <button class="logout-button" type="button">
+            <button class="logout-button" id="logout-button" type="button">
               <img src="../assets/icons/log-out.svg" alt="" />
               <span>Выйти</span>
             </button>
 
-            <a class="change-role" href="#">Сменить роль</a>
+            <a class="change-role" id="change-role" href="#">Сменить роль</a>
           </div>
         </div>
       </aside>
 
       <div class="content-area">
         <header class="topbar">
-          <span>Мои проекты</span>
+           <span id="topbar-title">Мои проекты</span>
 
           <button class="notification-button" type="button" aria-label="Уведомления">
             <img src="../assets/icons/bell.svg" alt="" />
-            <span class="notification-count">2</span>
           </button>
         </header>
 
         <main class="projects-page">
           <div class="page-header">
             <div>
-              <h1>Мои проекты</h1>
-              <p>Проекты, которые вы создали или в которые вас добавили</p>
+              <h1 id="page-title">Мои проекты</h1>
+              <p id="page-description">Проекты, которые вы создали или в которые вас добавили</p>
             </div>
 
-            <button class="button button--primary create-button" id="create-project">
+            <button class="button button--primary create-button" id="create-project" type="button">
               + Создать проект
             </button>
           </div>
+
+          <p id="projects-message" role="status" aria-live="polite"></p>
 
           <section
             class="projects-grid"
@@ -88,8 +88,8 @@
               <img src="../assets/icons/folder.svg" alt="" />
             </div>
 
-            <h2>У вас пока нет проектов</h2>
-            <p>
+            <h2 id="empty-title">У вас пока нет проектов</h2>
+             <p id="empty-description">
               Создайте проект или дождитесь, когда вас добавят
               в существующий.
             </p>

@@ -160,3 +160,13 @@
     grid-template-columns: 1fr;
   }
 }
+
+.projects-grid[hidden],
+.create-button[hidden],
+.button[hidden],
+#page-description[hidden] {
+  display: none;
+}
+#create-project[hidden] {
+  display: none;
+}
