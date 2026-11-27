@@ -9,6 +9,7 @@
   const warningText = createdOverlay.querySelector(".banner__text");
 
   const CREATED_TITLE = "Аккаунт создан";
+  const RESET_TITLE = "Пароль сброшен";
   const ROLE_ADDED_TITLE = "Роль тестировщика добавлена";
   const NEW_PASSWORD_WARNING_TITLE = "Пароль больше не будет показан";
   const NEW_PASSWORD_WARNING_TEXT =
@@ -26,9 +27,9 @@
     copyButton.textContent = COPY_TEXT;
   }
 
-  function showCreatedModal(data) {
-    const tester = data.user || {};
-    const password = data.temporaryPassword ?? null;
+  function showCreatedModal(data, title) {
+    const tester = data.tester || data.user || {};
+    const password = data.temporaryPassword ?? data.password ?? null;
     const roleAdded = Boolean(data.roleAdded);
 
     const fullName = [tester.firstName, tester.lastName]
@@ -49,7 +50,7 @@
       warningTitle.textContent = ROLE_ADDED_WARNING_TITLE;
       warningText.textContent = ROLE_ADDED_WARNING_TEXT;
     } else {
-      createdTitle.textContent = CREATED_TITLE;
+      createdTitle.textContent = title || CREATED_TITLE;
       createdPassword.textContent = password;
       passwordField.hidden = false;
       passwordField.style.display = "";
@@ -112,6 +113,10 @@
   });
 
   document.addEventListener("tester:created", function (event) {
-    showCreatedModal(event.detail);
+    showCreatedModal(event.detail, CREATED_TITLE);
+  });
+
+  document.addEventListener("tester:password-reset", function (event) {
+    showCreatedModal(event.detail, RESET_TITLE);
   });
 })();
