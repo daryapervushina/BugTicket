@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Новый тикет - BugTracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/variables.css" />
+    <link rel="stylesheet" href="../css/base.css" />
+    <link rel="stylesheet" href="../css/components.css" />
+    <link rel="stylesheet" href="../css/ticket-create.css" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <a class="brand" href="#">
+          <span class="brand__logo">B</span>
+          <span>BugTracker</span>
+        </a>
+
+        <nav class="sidebar__nav">
+          <p class="sidebar__caption">Меню</p>
+          <a class="nav-item nav-item--active" href="#" aria-current="page">
+            <img src="../assets/icons/folder.svg" alt="" />
+            <span>Список проектов</span>
+          </a>
+        </nav>
+
+        <div class="sidebar__profile">
+          <div class="avatar" id="profile-avatar"></div>
+          <div class="profile-info">
+            <strong id="profile-name"></strong>
+            <span id="profile-email"></span>
+            <p class="profile-role" id="profile-role"></p>
+          </div>
+          <div class="profile-actions">
+            <button type="button" class="logout-button" id="logout-btn">
+              <img src="../assets/icons/log-out.svg" alt="" />
+              <span>Выйти</span>
+            </button>
+            <a class="change-role" href="#">Сменить роль</a>
+          </div>
+        </div>
+      </aside>
+
+      <main class="content-area">
+        <header class="topbar">
+          <nav class="breadcrumbs" aria-label="Навигация">
+            <span>Проекты</span>
+            <span>/</span>
+            <span>Интернет-магазин «Ромашка»</span>
+            <span>/</span>
+            <strong>Новый тикет</strong>
+          </nav>
+          <button
+            type="button"
+            class="notification-button"
+            aria-label="Уведомления"
+          >
+            <img src="../assets/icons/bell.svg" alt="" />
+          </button>
+        </header>
+
+        <div class="ticket-page">
+          <a class="back-link" href="#">
+            <img src="../assets/icons/arrowLeft.svg" alt="" />
+            <span>К проекту</span>
+          </a>
+
+          <div class="ticket-header">
+            <h1 class="ticket-header__title">Новый тикет бага</h1>
+            <div class="ticket-header__actions">
+              <button type="button" class="button button--secondary">
+                Отмена
+              </button>
+              <button
+                type="button"
+                class="button button--primary"
+                id="save-ticket-btn"
+                disabled
+              >
+                Сохранить тикет
+              </button>
+            </div>
+          </div>
+
+          <div class="banner banner--danger ticket-banner">
+            <img
+              class="banner__icon"
+              src="../assets/icons/info-error.svg"
+              alt=""
+            />
+            <div class="banner__body">
+              <p class="banner__title">Заполните обязательные поля</p>
+              <p class="banner__text">
+                Название, шаги воспроизведения и хотя бы один файл с логами или
+                скриншотом.
+              </p>
+            </div>
+          </div>
+
+          <div class="ticket-layout">
+            <form class="ticket-form" novalidate>
+              <h2 class="ticket-form__title">Описание бага</h2>
+
+              <div class="input-field input-field--error">
+                <label class="input-field__label" for="ticket-title"
+                  >Название тикета *</label
+                >
+                <input
+                  class="input-field__control"
+                  type="text"
+                  id="ticket-title"
+                  name="title"
+                  placeholder="Название тикета"
+                />
+                <span class="input-field__error">Обязательное поле</span>
+              </div>
+
+              <div class="input-field">
+                <label class="input-field__label" for="ticket-description"
+                  >Описание</label
+                >
+                <textarea
+                  class="input-field__control input-field__control--textarea"
+                  id="ticket-description"
+                  name="description"
+                ></textarea>
+              </div>
+
+              <div class="input-field input-field--error">
+                <label class="input-field__label" for="ticket-steps"
+                  >Шаги воспроизведения *</label
+                >
+                <textarea
+                  class="input-field__control input-field__control--textarea"
+                  id="ticket-steps"
+                  name="steps"
+                  placeholder="Опишите по шагам, как воспроизвести баг, и что ожидалось"
+                ></textarea>
+                <span class="input-field__error">Обязательное поле</span>
+              </div>
+
+              <div class="input-field">
+                <span class="input-field__label">Логи / скриншоты *</span>
+                <label class="add-file add-file--error">
+                  <input
+                    type="file"
+                    id="ticket-files"
+                    multiple
+                    accept=".png,.jpg,.jpeg,.txt"
+                    hidden
+                  />
+                  <span class="add-file__icon" aria-hidden="true"></span>
+                  <span>Добавить файл</span>
+                </label>
+                <div class="ticket-files__messages">
+                  <span class="input-field__error"
+                    >Приложите хотя бы один файл</span
+                  >
+                  <span class="input-field__hint"
+                    >PNG, JPG - скриншоты, TXT - логи. До 10 МБ на файл.</span
+                  >
+                </div>
+              </div>
+            </form>
+
+            <aside class="ticket-params">
+              <h2 class="ticket-params__title">Параметры</h2>
+
+              <div class="ticket-params__properties">
+                <div class="property">
+                  <div class="property__header">
+                    <span>Статус бага</span>
+                    <img
+                      class="property__lock"
+                      src="../assets/icons/Lock.svg"
+                      alt=""
+                    />
+                  </div>
+                  <span class="chip chip--danger">Не исправлен</span>
+                  <p class="property__hint">Меняет ответственный разработчик</p>
+                </div>
+
+                <div class="property">
+                  <div class="property__header">
+                    <span>Статус проверки</span>
+                    <img
+                      class="property__lock"
+                      src="../assets/icons/Lock.svg"
+                      alt=""
+                    />
+                  </div>
+                  <span class="chip chip--outline">Не исправлен</span>
+                  <p class="property__hint">
+                    Для нового тикета всегда «Не исправлен»
+                  </p>
+                </div>
+
+                <div class="ticket-params__divider"></div>
+              </div>
+
+              <div class="ticket-params__fields">
+                <div class="input-field">
+                  <span class="input-field__label">Ответственный</span>
+                  <div class="custom-select" id="assignee-select">
+                    <button
+                      type="button"
+                      class="input-field__control custom-select__trigger"
+                      aria-haspopup="listbox"
+                      aria-label="Ответственный"
+                    >
+                      <span class="custom-select__text">Не назначен</span>
+                      <img src="../assets/icons/down.svg" alt="" />
+                    </button>
+
+                    <div class="custom-select__dropdown">
+                      <div class="custom-select__option" data-value="">
+                        Не назначен
+                      </div>
+                    </div>
+                    <input type="hidden" id="ticket-assignee" value="" />
+                  </div>
+                </div>
+
+                <div class="input-field ticket-params__field--priority">
+                  <span class="input-field__label">Приоритет</span>
+                  <div class="custom-select" id="priority-select">
+                    <button
+                      type="button"
+                      class="input-field__control custom-select__trigger"
+                      aria-haspopup="listbox"
+                      aria-label="Приоритет"
+                    >
+                      <span class="custom-select__text has-value">Высокий</span>
+                      <img src="../assets/icons/down.svg" alt="" />
+                    </button>
+
+                    <div class="custom-select__dropdown">
+                      <div class="custom-select__option" data-value="high">
+                        Высокий
+                      </div>
+                      <div class="custom-select__option" data-value="medium">
+                        Средний
+                      </div>
+                      <div class="custom-select__option" data-value="low">
+                        Низкий
+                      </div>
+                    </div>
+                    <input type="hidden" id="ticket-priority" value="high" />
+                  </div>
+                </div>
+
+                <div class="input-field">
+                  <label class="input-field__label" for="ticket-deadline"
+                    >Дедлайн</label
+                  >
+                  <div class="date-input">
+                    <input
+                      class="input-field__control date-input__control"
+                      type="text"
+                      id="ticket-deadline"
+                      name="deadline"
+                      placeholder="ДД.ММ.ГГГГ ЧЧ:ММ"
+                      autocomplete="off"
+                    />
+                    <span class="date-input__icon" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="../js/ticket-create.js"></script>
+  </body>
+</html>
